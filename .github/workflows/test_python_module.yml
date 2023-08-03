@@ -14,7 +14,7 @@ on:
 
 jobs:
   call-setup-python:
-    uses: ./.github/workflow/setup_python_base.yml@develop
+    uses: .github/workflows/setup_python_base.yml@develop
     with: 
       module-name: sys_conf
       cache: sys_conf
