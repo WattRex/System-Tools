@@ -17,7 +17,6 @@ jobs:
     uses: ./.github/workflows/setup_python_base.yml
     with: 
       module-name: sys_conf
-      cache: sys_conf
 
   test-package:
     runs-on: ubuntu-latest
