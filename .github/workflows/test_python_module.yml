@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/workflows/setup_python_base.yml
         with: 
           module-name: sys_conf
@@ -24,7 +25,7 @@ jobs:
       - name: Install module dependencies
         run: |
           if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi
-                
+
       - name: Install module dependencies
         run: |
           if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi
