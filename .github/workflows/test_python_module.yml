@@ -1,0 +1,35 @@
+# This workflow will install Python dependencies, run tests and pylint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python Module Analysis
+
+env:
+  MODULE: sys_conf
+
+on:
+  push:
+    branches: [ "feature/sys_conf" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  call-setup-python:
+    uses: ./.github/workflow/setup_python_base.yml
+    with: 
+      module-name: sys_conf
+      cache: sys_conf
+
+  test-package:
+    runs-on: ubuntu-latest
+    needs: call-setup-python
+    environment: development
+
+    steps:
+
+      - name: Install module dependencies
+        run: |
+          if [ -f code/$_MODULE/requirements.txt ]; then pip install -r code/$_MODULE/requirements.txt; fi
+
+      - name: Lint with pylint
+        run: |
+          pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc code/$_MODULE/
