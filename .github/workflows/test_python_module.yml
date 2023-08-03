@@ -8,7 +8,7 @@ env:
 
 on:
   push:
-    branches: [ "feature/sys_conf" ]
+    branches: [ "sys_conf" ]
   pull_request:
     branches: [ "develop" ]
 
