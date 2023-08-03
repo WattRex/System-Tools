@@ -17,7 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout tools repo
+        uses: actions/checkout@v3
+        with:
+          repository: WattRex/System-Tools
+          path: System-Tools
+          
       - uses: ./.github/workflows/setup_python_base.yml
         with: 
           module-name: sys_conf
