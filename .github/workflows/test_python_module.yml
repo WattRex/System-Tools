@@ -23,14 +23,10 @@ jobs:
           repository: WattRex/System-Tools
           path: System-Tools
           
-      - uses: ./.github/workflows/setup_python_base.yml
+      - uses: ./.github/actions/setup_python_base.yml
         with: 
           module-name: sys_conf
     
-      - name: Install module dependencies
-        run: |
-          if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi
-
       - name: Install module dependencies
         run: |
           if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi
