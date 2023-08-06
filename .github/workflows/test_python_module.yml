@@ -19,9 +19,9 @@ jobs:
     steps:
       - name: Checkout tools repo
         uses: actions/checkout@v3
-        with:
-          repository: WattRex/System-Tools
-          path: System-Tools
+        # with:
+        #   repository: WattRex/System-Tools
+        #   path: System-Tools
           
       - uses: ./.github/actions/setup_python
         with: 
