@@ -1,0 +1,30 @@
+# This github action will build a Python package module from source
+---
+name: Setup Python Base
+description: Builds the given package. FOr this, installs the required packages and pass a QA analysis for PEP8 syntaxis. 
+
+author: Marius Crisan
+branding:
+  icon: package
+  color: blue
+
+inputs:
+  module-name:
+    description: Name of the module to be compiled
+    required: true
+    type: string
+
+runs:
+  using: composite
+
+  steps:
+ 
+  - name: Install module dependencies
+    run: |
+      if [ -f "code/${{ inputs.module-name }}/requirements.txt" ]; then pip install -r code/$MODULE/requirements.txt; fi
+    shell: bash
+
+  - name: Lint with pylint
+    run: |
+      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc code/${{ inputs.module-name }}/
+    shell: bash

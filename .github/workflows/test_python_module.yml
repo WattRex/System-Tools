@@ -24,17 +24,14 @@ jobs:
 
     environment: development
     steps:
-      - name: Checkout tools repo
-        uses: actions/checkout@v3
-          
-      - uses: ./.github/actions/setup_python
+        
+      - name: Setup python environment
+        uses: ./.github/actions/setup-python
         with: 
-          python-version: "3.7"
-          
-      - name: Install module dependencies
-        run: |
-          if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Pass QA test and build package
+        uses: ./.github/actions/build-package
+        with: 
+          module-name: ${{ env.MODULE }}
 
-      - name: Lint with pylint
-        run: |
-          pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc code/$_MODULE/
