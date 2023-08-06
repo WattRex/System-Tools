@@ -11,10 +11,10 @@ branding:
 
 inputs:
   module-name:
-  description: Name of the Python package to inspect and build
-  required: true
-  #     default: .
-  type: string
+    description: Name of the Python package to inspect and build
+    required: true
+    #     default: .
+    type: string
 
 # outputs:
 #   dist:
