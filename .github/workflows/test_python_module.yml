@@ -13,20 +13,24 @@ on:
     branches: [ "develop" ]
 
 jobs:
+  
   call-setup-python:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # python-version: ["3.7", "3.9", "3.11"]
+        python-version: ["3.11"]
+
     environment: development
     steps:
       - name: Checkout tools repo
         uses: actions/checkout@v3
-        # with:
-        #   repository: WattRex/System-Tools
-        #   path: System-Tools
           
       - uses: ./.github/actions/setup_python
         with: 
-          module-name: sys_conf
-    
+          python-version: "3.7"
+          
       - name: Install module dependencies
         run: |
           if [ -f code/$MODULE/requirements.txt ]; then pip install -r code/$MODULE/requirements.txt; fi

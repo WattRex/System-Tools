@@ -1,19 +1,17 @@
-# This workflow will install Python dependencies, run tests and pylint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
+# This github action will install Python version and generic dependencies
 ---
 name: Setup Python Base
-description: Set environment and builds the current package, installing required packages, using Pylint for QA.
-author: Hynek Schlawack
+description: Set environment and install generic used dependencies.
+author: Marius Crisan
 branding:
   icon: package
   color: purple
 
 inputs:
-  module-name:
-    description: Name of the Python package to inspect and build
+  python-version:
+    description: Python version to be configured
     required: true
-    #     default: .
+    default: '3.9'
     type: string
 
 # outputs:
@@ -23,19 +21,14 @@ inputs:
 
 runs:
   using: composite
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     # python-version: ["3.7", "3.9", "3.11"]
-    #     python-version: ["3.11"]
 
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ inputs.python-version }}
       uses: actions/setup-python@v3
       with:        
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ inputs.python-version }}
 
     - name: Install dependencies
       run: |
