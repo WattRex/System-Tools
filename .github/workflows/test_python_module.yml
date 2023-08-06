@@ -23,7 +23,7 @@ jobs:
           repository: WattRex/System-Tools
           path: System-Tools
           
-      - uses: ./.github/actions/setup_python_base.yml
+      - uses: ./.github/actions/action.yml
         with: 
           module-name: sys_conf
     
