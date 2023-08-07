@@ -19,7 +19,8 @@ jobs:
 
     environment: development
     steps:
-        
+      - uses: actions/checkout@v3
+      
       - name: Build package ${{ github.ref_name }}
         if: contains(${{github.ref_name}} 
         uses: ./.github/workflows/build_python_package.yml
