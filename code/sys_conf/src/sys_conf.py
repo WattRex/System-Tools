@@ -63,11 +63,11 @@ def sys_conf_read_config_params(filename:str = 'config.yaml',
     with open(filename, 'r', encoding= 'utf-8') as file:
         data = yaml.safe_load(file)
     if section is not None:
-        if section not in data:
+        if section in data:
+            data = data[section]
+        else:
             raise SysConfSectionNotFoundErrorC( \
                 f"Section {section} not found in the {filename} file")
-        else:
-            data = data[section]
     return data
 
 def sys_conf_get_argv_password() -> str:
