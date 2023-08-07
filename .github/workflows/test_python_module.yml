@@ -25,6 +25,7 @@ jobs:
     environment: development
     steps:
         
+      - uses: actions/checkout@v3
       - name: Setup python environment
         uses: ./.github/actions/setup-python
         with: 
