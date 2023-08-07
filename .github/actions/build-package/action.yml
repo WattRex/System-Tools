@@ -32,7 +32,7 @@ runs:
       if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
     shell: bash
     env:
-      MODULE_PATH=code/${{ inputs.module-name}}
+      MODULE_PATH: code/${{ inputs.module-name}}
 
   - name: Lint with pylint
     run: |
