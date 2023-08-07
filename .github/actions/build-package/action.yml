@@ -14,10 +14,10 @@ inputs:
     required: true
     type: string
 
-env:
-  module-path: code/${{ inputs.module-name}}
 runs:
   using: composite
+  env:
+    module-path: code/${{ inputs.module-name}}
 
   steps:
  
