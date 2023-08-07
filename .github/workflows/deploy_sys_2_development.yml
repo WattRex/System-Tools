@@ -3,6 +3,7 @@
 
 name: Deployment of system tools modules to development env
 
+
 on:
   push:
     branches: [ "sys_conf", "sys_log", "sys_shd" ]
@@ -14,3 +15,26 @@ jobs:
     uses: ./.github/workflows/build_python_package.yml
     with:
       module_name: ${{ github.ref_name }}    
+    
+  publish-package:
+    name: Publish package ${{ github.ref_name }} to PyPi
+    needs: call-setup-python
+    runs-on: ubuntu-latest
+    environment: development
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     # python-version: ["3.7", "3.9", "3.11"]
+    #     python-version: ["3.11"]
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name:  ${{ github.ref_name }}
+      
+      - name: Publishing package ${{ github.ref_name }} 
+        uses: pypa/gh-action-pypi-publish
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          packages-dir: ${{ github.ref_name }}
