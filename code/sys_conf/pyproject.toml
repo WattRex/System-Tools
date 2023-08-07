@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "system_config_tools"
+version = "0.0.1"
+authors = [
+  { name="Marius Crisan", email="mariuscrsn+pypi@gmail.com" },
+  { name="Pablo Pastor", email="pastorpflores+pypi@gmail.com" },
+  { name="Javier Sanz", email="javiersanzmoline@gmail.com" }
+  { name="Roberto Aldea", email="r.aldea.csic+pypi@gmail.com" },
+  { name="Luis Roche", email="luis.roche@hotmail.com" },
+]
+keywords= ["yaml", "configuration"]
+
+description ="""
+    Toolchain used to read configuration file by section."""
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Topic :: Software Development :: Embedded Systems",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "python-can>=4.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/WattRex/Battery-Cycler-Drivers"
+"Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Drivers/issues"
