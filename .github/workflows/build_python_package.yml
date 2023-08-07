@@ -1,0 +1,37 @@
+# This workflow will install Python dependencies, run tests and pylint with a 
+# variety of Python versions
+
+name: Deployment python module to development environment
+
+on:
+  workflow_call:
+    inputs:
+      module_name:
+          description: Name of the python deployed module
+          required: true
+          type: string
+
+jobs:
+  
+  call-setup-python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # python-version: ["3.7", "3.9", "3.11"]
+        python-version: ["3.11"]
+
+    environment: development
+    steps:
+        
+      - uses: actions/checkout@v3
+
+      - name: Setup python environment
+        uses: ./.github/actions/setup-python
+        with: 
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Perform QA test and build package
+        uses: ./.github/actions/build-package
+        with: 
+          module-name: ${{ inputs.module_name }}
