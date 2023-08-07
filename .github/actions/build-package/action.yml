@@ -26,15 +26,7 @@ runs:
     id: vars
     run: |
       echo "module_path=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
-    - name: Set tag var
-      run: |
-        echo "docker_tag=$(echo ${GITHUB_REF} | cut -d'/' -f3)-${GITHUB_SHA}" >> $GITHUB_OUTPUT
-    - name: Docker Build
-      uses: "actions/docker/cli@master"
-      with:
-        args: build . --file Dockerfile -t cflynnus/blog:${{ steps.vars.outputs.docker_tag }}
-
-
+      
   - name: Install module dependencies
     run: |
       if [ -f "${{ steps.vars.outputs.module_path }}/requirements.txt" ]; then pip install -r ${{ steps.vars.outputs.module_path }}/requirements.txt; fi
