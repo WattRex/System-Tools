@@ -35,3 +35,11 @@ jobs:
         uses: ./.github/actions/build-package
         with: 
           module-name: ${{ inputs.module_name }}
+      
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.module_name }}
+          path: |
+            dist
+            
