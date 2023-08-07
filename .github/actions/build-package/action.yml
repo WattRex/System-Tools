@@ -16,7 +16,7 @@ inputs:
 
 runs:
   env:
-    module-path: code/${{ inputs.module-name}}
+    MODULE_PATH: code/${{ inputs.module-name}}
   
   using: composite
   
@@ -24,15 +24,15 @@ runs:
  
   - name: Install module dependencies
     run: |
-      if [ -f "${{ env.module-path }}/requirements.txt" ]; then pip install -r ${{ env.module-path }}/requirements.txt; fi
+      if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.module-path }}/
+      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ %{{ env.module-path }}
+      python3 -m build --sdist --wheel --outdir dist/ %{{ env.MODULE_PATH }}
     shell: bash
