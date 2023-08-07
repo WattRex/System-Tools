@@ -26,6 +26,7 @@ runs:
     id: vars
     run: |
       echo "module_path=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
+    shell: bash
       
   - name: Install module dependencies
     run: |
