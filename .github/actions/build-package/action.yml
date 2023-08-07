@@ -1,7 +1,7 @@
 # This github action will build a Python package module from source
 ---
 name: Build Python Package
-description: Builds the given package. FOr this, installs the required packages and pass a QA analysis for PEP8 syntaxis. 
+description: Builds the given package. For this, installs the required packages and pass a QA analysis for PEP8 syntaxis. 
 
 author: Marius Crisan
 branding:
@@ -15,30 +15,26 @@ inputs:
     type: string
 
 runs:
-  # env:
-  #   MODULE_PATH: code/${{ inputs.module-name}}
-  
   using: composite
-  
   steps:
  
   - name: Set environment variable
     id: vars
     run: |
-      echo "module_path=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
+      echo "MODULE_PATH=code/${{ inputs.module-name}}" >> $GITHUB_ENV
     shell: bash
-      
+
   - name: Install module dependencies
     run: |
-      if [ -f "${{ steps.vars.outputs.module_path }}/requirements.txt" ]; then pip install -r ${{ steps.vars.outputs.module_path }}/requirements.txt; fi
+      if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ steps.vars.outputs.module_path }}/
+      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ steps.vars.outputs.module_path }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ env.MODULE_PATH }}
     shell: bash
