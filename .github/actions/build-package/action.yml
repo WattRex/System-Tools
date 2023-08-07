@@ -22,24 +22,29 @@ runs:
   
   steps:
  
-  # - name: Set environment variable
-  #   run: |
-  #     echo "MODULE_PATH=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
+  - name: Set environment variable
+    id: vars
+    run: |
+      echo "module_path=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
+    - name: Set tag var
+        run: echo "docker_tag=$(echo ${GITHUB_REF} | cut -d'/' -f3)-${GITHUB_SHA}" >> $GITHUB_OUTPUT
+      - name: Docker Build
+        uses: "actions/docker/cli@master"
+        with:
+          args: build . --file Dockerfile -t cflynnus/blog:${{ steps.vars.outputs.docker_tag }}
 
 
   - name: Install module dependencies
     run: |
-      if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
+      if [ -f "${{ steps.vars.outputs.module_path }}/requirements.txt" ]; then pip install -r ${{ steps.vars.outputs.module_path }}/requirements.txt; fi
     shell: bash
-    env:
-      MODULE_PATH: code/${{ inputs.module-name}}
 
   - name: Lint with pylint
     run: |
-      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
+      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ steps.vars.outputs.module_path }}/
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ %{{ env.MODULE_PATH }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ steps.vars.outputs.module_path }}
     shell: bash
