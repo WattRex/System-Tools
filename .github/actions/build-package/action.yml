@@ -22,10 +22,17 @@ runs:
   
   steps:
  
+  # - name: Set environment variable
+  #   run: |
+  #     echo "MODULE_PATH=code/${{ inputs.module-name}}" >> $GITHUB_OUTPUT
+
+
   - name: Install module dependencies
     run: |
       if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
     shell: bash
+    env:
+      MODULE_PATH=code/${{ inputs.module-name}}
 
   - name: Lint with pylint
     run: |
