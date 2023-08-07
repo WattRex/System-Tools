@@ -1,6 +1,6 @@
 # This github action will build a Python package module from source
 ---
-name: Setup Python Base
+name: Build Python Package
 description: Builds the given package. FOr this, installs the required packages and pass a QA analysis for PEP8 syntaxis. 
 
 author: Marius Crisan
@@ -14,6 +14,8 @@ inputs:
     required: true
     type: string
 
+env:
+  module-path: code/${{ inputs.module-name}}
 runs:
   using: composite
 
@@ -21,10 +23,15 @@ runs:
  
   - name: Install module dependencies
     run: |
-      if [ -f "code/${{ inputs.module-name }}/requirements.txt" ]; then pip install -r code/$MODULE/requirements.txt; fi
+      if [ -f "${{ env.module-path }}/requirements.txt" ]; then pip install -r ${{ env.module-path }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc code/${{ inputs.module-name }}/
+      pylint --exit-zero --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.module-path }}/
+    shell: bash
+
+  - name: Build a binary wheel and a source tarball
+    run: |
+      python3 -m build --sdist --wheel --outdir dist/ %{{ env.module-path }}
     shell: bash
