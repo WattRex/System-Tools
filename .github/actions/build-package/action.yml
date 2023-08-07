@@ -15,10 +15,11 @@ inputs:
     type: string
 
 runs:
-  using: composite
   env:
     module-path: code/${{ inputs.module-name}}
-
+  
+  using: composite
+  
   steps:
  
   - name: Install module dependencies
