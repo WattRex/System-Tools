@@ -15,8 +15,8 @@ inputs:
     type: string
 
 runs:
-  env:
-    MODULE_PATH: code/${{ inputs.module-name}}
+  # env:
+  #   MODULE_PATH: code/${{ inputs.module-name}}
   
   using: composite
   
