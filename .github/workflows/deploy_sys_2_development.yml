@@ -8,11 +8,11 @@ on:
 
 jobs:
   
-  # call-setup-python:
-  #   name: Build package ${{ github.ref_name }}
-  #   uses: ./.github/workflows/build_python_package.yml
-  #   with:
-  #     module_name: ${{ github.ref_name }}    
+  call-setup-python:
+    name: Build package ${{ github.ref_name }}
+    uses: ./.github/workflows/build_python_package.yml
+    with:
+      module_name: ${{ github.ref_name }}    
       
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
@@ -48,4 +48,4 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: ${{ github.ref_name }}/
+          packages-dir: ${{ github.ref_name }}/dist/
