@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/build_python_package.yml
     with:
       module_name: ${{ github.ref_name }}    
-    
+      
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
     needs: call-setup-python
@@ -33,9 +33,13 @@ jobs:
           name:  ${{ github.ref_name }}
           path: ~/${{ github.ref_name }}/dist/
       
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ~/${{ github.ref_name }}/dist/
+
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: ~/${{ github.ref_name }}/dist/
+          packages-dir: ~/${{ github.ref_name }}/
