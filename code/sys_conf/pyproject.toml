@@ -13,7 +13,7 @@ name = "system_config_tool"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
-version = "0.0.4"
+version = "0.0.5"
 
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
