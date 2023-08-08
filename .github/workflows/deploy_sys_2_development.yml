@@ -2,7 +2,6 @@
 
 name: Deployment of system tools modules to development env
 
-
 on:
   push:
     branches: [ "sys_conf", "sys_log", "sys_shd" ]
