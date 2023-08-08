@@ -16,7 +16,7 @@ jobs:
       
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
-    # needs: call-~/${{ github.ref_name }}/dist/setup-python
+    needs: call-setup-python
     runs-on: ubuntu-latest
     environment: development
     permissions:
@@ -32,6 +32,7 @@ jobs:
         with:
           name:  ${{ github.ref_name }}
           path: ${{ github.ref_name }}/dist/
+
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
