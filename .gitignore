@@ -10,6 +10,7 @@ log/*
 *.log*
 *.yaml
 *.yml
+*__version__.py*
 
 
 ### Software IDEAS ###
