@@ -1,6 +1,6 @@
 [build-system]
 # These are the assumed default build requirements from pip:
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +13,8 @@ name = "system_config_tool"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
-version = "0.0.5"
+# version = "0.0.5"
+dynamic = ["version"]
 
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
@@ -149,4 +150,7 @@ dependencies = [ # Optional
 # If there are data files included in your packages that need to be
 # installed, specify them here.
 # package-data = {"sample" = ["*.dat"]}
+
+[tool.setuptools_scm]
+write_to = "code/sys_conf/src/system_config_tool/__version__.py"
 
