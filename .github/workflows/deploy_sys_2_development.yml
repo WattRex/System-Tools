@@ -32,16 +32,6 @@ jobs:
         with:
           name:  ${{ github.ref_name }}
           path: ${{ github.ref_name }}/dist/
-      
-      - name: Display structure of downloaded files
-        run: ls -R ${{ github.ref_name }}/dist/
-        
-      - name: Show path
-        run: pwd
-      
-      - name: Using dir
-        run: pwd
-        working-directory: ${{ github.ref_name }}/dist/
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
