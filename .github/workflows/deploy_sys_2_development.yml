@@ -8,15 +8,15 @@ on:
 
 jobs:
   
-  call-setup-python:
-    name: Build package ${{ github.ref_name }}
-    uses: ./.github/workflows/build_python_package.yml
-    with:
-      module_name: ${{ github.ref_name }}    
+  # call-setup-python:
+  #   name: Build package ${{ github.ref_name }}
+  #   uses: ./.github/workflows/build_python_package.yml
+  #   with:
+  #     module_name: ${{ github.ref_name }}    
       
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
-    needs: call-setup-python
+    # needs: call-~/${{ github.ref_name }}/dist/setup-python
     runs-on: ubuntu-latest
     environment: development
     permissions:
@@ -34,7 +34,13 @@ jobs:
           path: ${{ github.ref_name }}/dist/
       
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R ${{ github.ref_name }}/dist/
+        
+      - name: Show path
+        run: pwd
+      
+      - name: Using dir
+        run: pwd
         working-directory: ${{ github.ref_name }}/dist/
 
       - name: Publish package to PyPI
