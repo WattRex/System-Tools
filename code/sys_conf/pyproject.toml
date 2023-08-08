@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "system_config_tools"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Marius Crisan", email="mariuscrsn+pypi@gmail.com" },
   { name="Pablo Pastor", email="pastorpflores+pypi@gmail.com" },
