@@ -152,5 +152,6 @@ dependencies = [ # Optional
 # package-data = {"sample" = ["*.dat"]}
 
 [tool.setuptools_scm]
+root = "../../"
 write_to = "code/sys_conf/src/system_config_tool/__version__.py"
 
