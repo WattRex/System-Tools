@@ -2,9 +2,16 @@
 import subprocess
 import toml
 import re
+import sys
+
+if len(sys.argv) != 2:
+    print("bash usage: python3 get_version.py <path to toml project file> ")    
+    exit(1)
+else:
+    project_path = sys.argv[1]
 
 vparse = lambda x: tuple(map(int, x.split('.')))
-data = toml.load('pyproject.toml')
+data = toml.load(f'{project_path}/pyproject.toml')
 
 name = data['project']['name']
 # checkout_version = data['project']['version']
