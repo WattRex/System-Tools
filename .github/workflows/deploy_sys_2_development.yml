@@ -25,6 +25,7 @@ jobs:
       module_name: ${{ github.ref_name }}
       
   publish-package:
+    
     name: Publish package ${{ github.ref_name }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
     #needs: call-setup-python
@@ -32,12 +33,18 @@ jobs:
     environment: development
     permissions:
       id-token: write
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     # python-version: ["3.7", "3.9", "3.11"]
-    #     python-version: ["3.11"]
+      # strategy:
+        #   fail-fast: false
+        #   matrix:
+          #     # python-version: ["3.7", "3.9", "3.11"]
+          #     python-version: ["3.11"]
+
     steps:
+      - name: Build package ${{ github.event.pull_request_review.pull_request.base.ref }}
+        uses: ./.github/workflows/build_python_package.yml
+        with:
+          module_name: ${{ github.event.pull_request_review.pull_request.base.ref }}
+
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
