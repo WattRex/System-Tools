@@ -6,7 +6,7 @@
 config.*
 *.ini
 *.cred.*
-log/*
+*log/*
 *.log*
 *.yaml
 *.yml

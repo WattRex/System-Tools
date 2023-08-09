@@ -1,7 +1,6 @@
 [build-system]
 # These are the assumed default build requirements from pip:
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
-# requires = ["setuptools>=61.0", "setuptools-git-versioning"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,17 +9,18 @@ build-backend = "setuptools.build_meta"
 # users can install this project, e.g.:
 #
 # $ pip install <sampleproject>
-name = "system_config_tool"
+name = "system_logger_tool"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
-# version = "0.0.5"
-dynamic = ["version", "dependencies"]
+# version = "0.0.1"
+dynamic = ["version","dependencies"]
+
 
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
 # https://packaging.python.org/specifications/core-metadata/#summary
-description ="Toolchain used to read configuration file by section." # Optional
+description ="Toolchain used to  recording log events at different levels ." # Optional
 
 # This is an optional longer description of your project that represents
 # the body of text which users will see when they visit PyPI.
@@ -49,7 +49,7 @@ license = {file = "LICENSE.txt"}
 # Note that this is a list of additional keywords, separated
 # by commas, to be used to assist searching for the distribution in a
 # larger catalog.
-keywords= ["yaml", "configuration"]  # Optional
+keywords= ["yaml", "configuration", "logging", "screenshot"]  # Optional
 
 # This should be your name or the name of the organization who originally
 # authored the project, and a valid email address corresponding to the name
@@ -154,8 +154,6 @@ dependencies = {file = ["requirements.txt"]}
 # installed, specify them here.
 # package-data = {"sample" = ["*.dat"]}
 
-# [tool.setuptools-git-versioning]
-# enabled = true
 
 [tool.setuptools_scm]
 root = "../../"
