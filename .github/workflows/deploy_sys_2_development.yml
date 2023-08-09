@@ -40,10 +40,10 @@ jobs:
           #     python-version: ["3.11"]
 
     steps:
-      - name: Build package ${{ github.head_ref }}
+      - name: Build package ${{ github.event.pull_request_review.pull_request.head.ref }}
         uses: ./.github/workflows/build_python_package.yml
         with:
-          module_name: ${{ github.head_ref }}
+          module_name: ${{ github.event.pull_request_review.pull_request.head.ref }}
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
