@@ -35,7 +35,7 @@ jobs:
     
     name: Publish package ${{ github.event.pull_request.head.ref }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
-    # needs: build-package-on-pull-request
+    needs: build-package-on-pull-request
     runs-on: ubuntu-latest
     environment: development
     permissions:
@@ -47,11 +47,6 @@ jobs:
           #     python-version: ["3.11"]
 
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
