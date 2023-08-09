@@ -31,7 +31,7 @@ runs:
 
   - name: Lint with pylint
     run: |
-      pylint --ignore-pattern="tests/*, .*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
+      pylint --ignore-pattern="${{ github.event.pull_request.head.ref }}/tests/*, .*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
     shell: bash
 
   - name: Check new version
