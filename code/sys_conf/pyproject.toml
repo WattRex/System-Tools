@@ -156,6 +156,7 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools-git-versioning]
 enabled = true
+
 # [tool.setuptools_scm]
 # root = "../../"
 # write_to = "code/sys_conf/src/system_config_tool/__version__.py"
