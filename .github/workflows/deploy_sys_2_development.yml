@@ -17,17 +17,17 @@ on:
 
 jobs:
   
-  call-setup-python:
+  build-on-push:
     if: ${{ github.event_name == 'push' }}
     name: Build package ${{ github.ref_name }}
     uses: ./.github/workflows/build_python_package.yml
     with:
-      module_name: ${{ github.ref_name }}    
+      module_name: ${{ github.ref_name }}
       
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
-    needs: call-setup-python
+    #needs: call-setup-python
     runs-on: ubuntu-latest
     environment: development
     permissions:
