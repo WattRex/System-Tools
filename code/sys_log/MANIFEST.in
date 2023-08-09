@@ -1,0 +1,3 @@
+include src/logginConfig.conf src/log_config.yaml
+
+global-exclude tests/* 
