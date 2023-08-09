@@ -18,6 +18,7 @@ on:
 jobs:
   
   call-setup-python:
+    if: ${{ github.event_name == 'push' }}
     name: Build package ${{ github.ref_name }}
     uses: ./.github/workflows/build_python_package.yml
     with:
