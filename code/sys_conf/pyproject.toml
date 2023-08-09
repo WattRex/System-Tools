@@ -56,10 +56,10 @@ keywords= ["yaml", "configuration"]  # Optional
 # listed.
 authors = [
   # Optional
+  { name="Roberto Aldea", email="r.aldea.csic+pypi@gmail.com" },
   { name="Marius Crisan", email="mariuscrsn+pypi@gmail.com" },
   { name="Pablo Pastor", email="pastorpflores+pypi@gmail.com" },
   { name="Javier Sanz", email="javiersanzmoline@gmail.com" },
-  { name="Roberto Aldea", email="r.aldea.csic+pypi@gmail.com" },
   { name="Luis Roche", email="luis.roche@hotmail.com" }
 ]
 

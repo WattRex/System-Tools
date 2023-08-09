@@ -5,6 +5,15 @@ name: Deployment of system tools modules to development env
 on:
   push:
     branches: [ "sys_conf", "sys_log", "sys_shd" ]
+  
+  pull_request_review:
+    # types: [edited]
+    review:
+      state: [approved]
+    pull_request:
+      base:
+        ref: [ "sys_conf", "sys_log", "sys_shd" ] 
+
 
 jobs:
   
