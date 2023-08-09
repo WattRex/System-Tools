@@ -1,7 +1,7 @@
 [build-system]
 # These are the assumed default build requirements from pip:
-# requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
-requires = ["setuptools>=61.0", "setuptools-git-versioning"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
+# requires = ["setuptools>=61.0", "setuptools-git-versioning"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -154,11 +154,11 @@ dependencies = {file = ["requirements.txt"]}
 # installed, specify them here.
 # package-data = {"sample" = ["*.dat"]}
 
-[tool.setuptools-git-versioning]
-enabled = true
+# [tool.setuptools-git-versioning]
+# enabled = true
 
-# [tool.setuptools_scm]
-# root = "../../"
-# write_to = "code/sys_conf/src/system_config_tool/__version__.py"
-# version_scheme="python-simplified-semver"
-# normalize="True"
+[tool.setuptools_scm]
+root = "../../"
+write_to = "code/sys_conf/src/system_config_tool/__version__.py"
+version_scheme="python-simplified-semver"
+normalize="True"

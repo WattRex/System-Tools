@@ -34,7 +34,15 @@ runs:
       pylint --ignore-pattern=".*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
     shell: bash
 
+  - name: Check new version
+    id: get-version
+    shell: bash
+    run: |
+      python3 get_version.py
+
   - name: Build a binary wheel and a source tarball
     run: |
       python3 -m build --sdist --wheel --outdir dist/ ${{ env.MODULE_PATH }}
     shell: bash
+    env:
+      SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
