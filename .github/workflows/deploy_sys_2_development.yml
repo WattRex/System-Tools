@@ -24,12 +24,12 @@ jobs:
     with:
       module_name: ${{ github.ref_name }}
   
-  # build-package-on-pull-request:
-  #   if: ${{ github.event_name == 'pull_request_review' }}
-  #   name: Build package  ${{ github.event.pull_request_review.pull_request.head.ref }}
-  #   uses: ./.github/workflows/build_python_package.yml
-  #   with:
-  #     module_name: ${{ github.event.pull_request_review.pull_request.head.ref }}
+  build-package-on-pull-request:
+    if: ${{ github.event_name == 'pull_request_review' }}
+    name: Build package  ${{ github.event.pull_request.head.ref }}
+    uses: ./.github/workflows/build_python_package.yml
+    with:
+      module_name: ${{ github.event.pull_request.head.ref }}
     
   publish-package:
     
@@ -55,8 +55,8 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name:  ${{ github.ref_name }}
-          path: ${{ github.ref_name }}/dist/
+          name:  ${{ github.event.pull_request.head.ref }}
+          path: ${{ github.event.pull_request.head.ref }}/dist/
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
