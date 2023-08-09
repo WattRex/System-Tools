@@ -31,4 +31,5 @@ runs:
       python3 -m pip install pylint
       python3 -m pip install build --user # pypa/build
       python3 -m pip install toml
+      python3 -m pip install setuptools-scm
     shell: bash
