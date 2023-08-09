@@ -25,6 +25,7 @@ jobs:
       
   publish-package:
     name: Publish package ${{ github.ref_name }} to PyPi
+    if: ${{ github.event_name == 'pull_request_review' }}
     needs: call-setup-python
     runs-on: ubuntu-latest
     environment: development
