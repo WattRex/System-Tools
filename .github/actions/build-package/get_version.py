@@ -15,8 +15,11 @@ data = toml.load(f'{project_path}/pyproject.toml')
 
 name = data['project']['name']
 # checkout_version = data['project']['version']
-checkout_version = subprocess.run('pip3 show system-config-tool | grep Version ' +
-            '| tr -s \' \' | cut -d\' \' -f2', stdout=subprocess.PIPE, shell=True).stdout
+# checkout_version = subprocess.run('pip3 show system-config-tool | grep Version ' +
+#             '| tr -s \' \' | cut -d\' \' -f2', stdout=subprocess.PIPE, shell=True).stdout
+checkout_version = subprocess.run('python3 -m setuptools_scm -r ./ ' +
+                '--config code/sys_conf/pyproject.toml', stdout=subprocess.PIPE, 
+                shell=True).stdout
 
 checkout_version = re.findall(r'\d\.\d\.\d', str(checkout_version))[0]
 pypi_version = subprocess.run(f'python3 -m pip index versions {name}',
