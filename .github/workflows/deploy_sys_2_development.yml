@@ -3,8 +3,8 @@
 name: Deployment of system tools modules to development env
 
 on:
-  # push:
-  #   branches: [ "sys_conf", "sys_log", "sys_shd" ]
+  push:
+    branches: [ "sys_conf", "sys_log", "sys_shd" ]
   
   pull_request_review:
     # types: [edited]
@@ -33,7 +33,7 @@ jobs:
     
   publish-package:
     
-    name: Publish package ${{ github.ref_name }} to PyPi
+    name: Publish package ${{ github.event.pull_request.head.ref }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
     # needs: build-package-on-pull-request
     runs-on: ubuntu-latest
