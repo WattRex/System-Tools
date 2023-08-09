@@ -58,4 +58,4 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: ${{ github.ref_name }}/dist/
+          packages-dir: ${{ github.event.pull_request.head.ref }}/dist/
