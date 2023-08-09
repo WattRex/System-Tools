@@ -30,4 +30,5 @@ runs:
       python3 -m pip install --upgrade pip
       python3 -m pip install pylint
       python3 -m pip install build --user # pypa/build
+      python3 -m pip install toml
     shell: bash
