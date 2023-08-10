@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup python environment
-        uses: ./.github/actions/setup-python
+        uses: WattRex/System-Tools/.github/actions/setup-python
         with: 
           python-version: ${{ matrix.python-version }}
       

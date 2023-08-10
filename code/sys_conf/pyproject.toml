@@ -137,8 +137,8 @@ dependencies = {file = ["requirements.txt"]}
 [project.urls]  # Optional
 "Homepage" = "https://github.com/WattRex/System-Tools"
 "Bug Reports" = "https://github.com/WattRex/System-Tools/issues"
-"Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Drivers/issues"
-"Source" = "https://github.com/WattRex/System-Tools/code/sys_conf"
+"Bug Tracker" = "https://github.com/WattRex/System-Tools/issues"
+"Source" = "https://github.com/WattRex/System-Tools/tree/develop/code/sys_conf"
 "Funding" = "https://donate.pypi.org"
 # "Say Thanks!" = "http://saythanks.io/to/example"
 
