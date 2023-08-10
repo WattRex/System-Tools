@@ -27,12 +27,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup python environment
-        uses: WattRex/System-Tools/.github/actions/setup-python
+        uses: WattRex/System-Tools/.github/actions/setup-python@develop
         with: 
           python-version: ${{ matrix.python-version }}
       
       - name: Perform QA test and build package
-        uses: WattRex/System-Tools/.github/actions/build-package
+        uses: WattRex/System-Tools/.github/actions/build-package@develop
         with: 
           module-name: ${{ inputs.module_name }}
       
