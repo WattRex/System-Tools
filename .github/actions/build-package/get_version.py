@@ -44,10 +44,10 @@ def merge_version():
         new_version = checkout_version
     else:
         new_version = pypi_version
+        patch = int(new_version[-1]) + 1
+        new_version = f'{new_version[:-1]}{patch}'
+    
     print(f"Local version: {checkout_version}, Pypi version: {pypi_version}")
-    patch = int(new_version[-1]) + 2
-    new_version = f'{new_version[:-1]}{patch}'
-
     print(f"New version package is: {new_version}")
     subprocess.run(f'echo new-version={new_version} >> $GITHUB_OUTPUT', shell=True, check=False)
 
