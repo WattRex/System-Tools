@@ -19,14 +19,15 @@ def merge_version():
         project_path = sys.argv[1]
 
     vparse = lambda x: tuple(map(int, x.split('.'))) # pylint: disable= unnecessary-lambda-assignment
-    data = toml.load(f'{project_path}/pyproject.toml')
+    toml_proj_path = f'{project_path}/pyproject.toml'
+    data = toml.load(toml_proj_path)
 
     name = data['project']['name']
     # checkout_version = data['project']['version']
     # checkout_version = subprocess.run('pip3 show system-config-tool | grep Version ' +
     #             '| tr -s \' \' | cut -d\' \' -f2', stdout=subprocess.PIPE, shell=True).stdout
     checkout_version = subprocess.run('python3 -m setuptools_scm -r ./ ' +
-                    '--config code/sys_conf/pyproject.toml', stdout=subprocess.PIPE,
+                    f'--config {toml_proj_path}', stdout=subprocess.PIPE,
                     shell=True, check=False).stdout
 
     print(f"Local version: {checkout_version}")
