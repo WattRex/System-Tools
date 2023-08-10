@@ -32,7 +32,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - name: Perform QA test and build package
-        uses: ./.github/actions/build-package
+        uses: WattRex/System-Tools/.github/actions/build-package
         with: 
           module-name: ${{ inputs.module_name }}
       
