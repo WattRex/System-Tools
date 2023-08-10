@@ -29,15 +29,16 @@ def merge_version():
                     '--config code/sys_conf/pyproject.toml', stdout=subprocess.PIPE,
                     shell=True, check=False).stdout
 
+    print(f"Local version: {checkout_version}")
     checkout_version = re.findall(r'\d\.\d\.\d', str(checkout_version))[0]
     pypi_check = subprocess.run(f'python3 -m pip index versions {name}',
                                 shell=True, capture_output=True, check= False)
     new_local_version = False
-    print(f"Local version: {checkout_version}, Pypi version: {pypi_version}")
     if pypi_check.returncode > 0:
         new_local_version = True
     else:
         pypi_version = pypi_check.stdout
+        print(f"Pypi version: {pypi_version}")
         pypi_version = pypi_version.split(b'\n', 1)[0].split(b' ')[1][1:-1].decode('utf-8')
         new_local_version = vparse(checkout_version) > vparse(pypi_version)
 
