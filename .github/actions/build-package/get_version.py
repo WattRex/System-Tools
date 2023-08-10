@@ -33,6 +33,7 @@ def merge_version():
     pypi_check = subprocess.run(f'python3 -m pip index versions {name}',
                                 shell=True, capture_output=True, check= False)
     new_local_version = False
+    print(f"Local version: {checkout_version}, Pypi version: {pypi_version}")
     if pypi_check.returncode > 0:
         new_local_version = True
     else:
@@ -47,7 +48,6 @@ def merge_version():
         patch = int(new_version[-1]) + 1
         new_version = f'{new_version[:-1]}{patch}'
     
-    print(f"Local version: {checkout_version}, Pypi version: {pypi_version}")
     print(f"New version package is: {new_version}")
     subprocess.run(f'echo new-version={new_version} >> $GITHUB_OUTPUT', shell=True, check=False)
 
