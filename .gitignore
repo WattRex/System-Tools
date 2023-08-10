@@ -10,7 +10,7 @@ config.*
 *.log*
 *.yaml
 *.yml
-*__version__.py*
+*__version__.py
 
 
 ### Software IDEAS ###
