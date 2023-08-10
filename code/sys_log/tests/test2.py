@@ -13,7 +13,7 @@ import system_logger_tool as sys_log
 
 if __name__ == "__main__":
     cycler_logger = sys_log.SysLogLoggerC()
-log = sys_log.sys_log_logger_get_module_logger(__name__)
+log = sys_log.sys_log_logger_get_module_logger(__name__, "log_config.yaml")
 
 #######################       THIRD PARTY IMPORTS        #######################
 

@@ -11,8 +11,10 @@ This will be the main test file where the logger is called"""
 import system_logger_tool as sys_log
 
 if __name__ == "__main__":
-    cycler_logger = sys_log.SysLogLoggerC()
-log = sys_log.sys_log_logger_get_module_logger(__name__)
+    cycler_logger = sys_log.SysLogLoggerC() 
+    # Optional to include custom logginConfig.conf
+log = sys_log.sys_log_logger_get_module_logger(__name__, "log_config.yaml") 
+# Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################
 
