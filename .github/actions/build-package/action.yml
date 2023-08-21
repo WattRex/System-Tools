@@ -11,7 +11,11 @@ branding:
 inputs:
   module-name:
     description: Name of the module to be compiled
-    required: true
+    required: false
+    type: string
+  package-name:
+    description: Name of the package to be compiled
+    required: false
     type: string
 
 runs:
@@ -21,7 +25,21 @@ runs:
   - name: Set environment variable
     id: vars
     run: |
-      echo "MODULE_PATH=code/${{ inputs.module-name}}" >> $GITHUB_ENV
+      if [ -z ${{ inputs.module-name}} ] 
+      then
+        echo "MODULE_PATH=code" >> $GITHUB_ENV
+        echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
+      else
+        echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
+        ]
+      fi
+
+      if [ -z $${{ inputs.package-name}} ] 
+      then
+        echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
+      else
+        echo "PACKAGE_NAME=${{ env.MODULE_PATH }}" >> $GITHUB_ENV
+      fi
     shell: bash
 
   - name: Install module dependencies
@@ -31,7 +49,7 @@ runs:
 
   - name: Lint with pylint
     run: |
-      pylint --ignore="${{ env.MODULE_PATH }}/tests" --ignore-pattern="${{ env.MODULE_PATH }}/tests/*, .*\.txt,.*\.yaml, .*\.yml" --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
+      pylint --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
     shell: bash
 
   - name: Check new version
@@ -42,7 +60,7 @@ runs:
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ env.MODULE_PATH }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ env.PACKAGE_NAME }}
     shell: bash
     env:
       SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
