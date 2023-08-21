@@ -28,7 +28,6 @@ runs:
       if [ -z ${{ inputs.module-name}} ]
       then
         echo "MODULE_PATH=code" >> $GITHUB_ENV
-        echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
       else
         echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
         ]
@@ -38,7 +37,7 @@ runs:
       then
         echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
       else
-        echo "PACKAGE_NAME=${{ env.MODULE_PATH }}" >> $GITHUB_ENV
+        echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
       fi
     shell: bash
 
