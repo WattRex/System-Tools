@@ -27,6 +27,24 @@ jobs:
 
     environment: development
     steps:
+      - name: Set environment variable
+        id: vars
+        run: |
+          if [ -z ${{ inputs.module-name}} ]
+          then
+            echo "MODULE_PATH=code" >> $GITHUB_ENV
+          else
+            echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
+            ]
+          fi
+
+          if [ -z $${{ inputs.package-name}} ]
+          then
+            echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
+          else
+            echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
+          fi
+        shell: bash
 
       - uses: actions/checkout@v3
 
@@ -38,13 +56,13 @@ jobs:
       - name: Perform QA test and build package
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
-          module-name: ${{ inputs.module-name }}
-          package-name: ${{ inputs.package-name }}
+          module-name: ${{ env.MODULE_PATH }}
+          package-name: ${{ env.PACKAGE_NAME }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.package_name }}
+          name: ${{ env.PACKAGE_NAME }}
           path: |
             dist
 

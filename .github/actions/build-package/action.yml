@@ -22,44 +22,25 @@ runs:
   using: composite
   steps:
 
-  - name: Set environment variable
-    id: vars
-    run: |
-      if [ -z ${{ inputs.module-name}} ]
-      then
-        echo "MODULE_PATH=code" >> $GITHUB_ENV
-      else
-        echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
-        ]
-      fi
-
-      if [ -z $${{ inputs.package-name}} ]
-      then
-        echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
-      else
-        echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
-      fi
-    shell: bash
-
   - name: Install module dependencies
     run: |
-      if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
+      if [ -f "${{ inputs.module-name }}/requirements.txt" ]; then pip install -r ${{ inputs.module-name }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/*
+      pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
     shell: bash
 
   - name: Check new version
     id: get-version
     run: |
-      python3 ${{ github.action_path }}/get_version.py ${{ env.MODULE_PATH }}
+      python3 ${{ github.action_path }}/get_version.py ${{ inputs.module-name }}
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ env.MODULE_PATH }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.module-name }}
     shell: bash
     env:
       SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
