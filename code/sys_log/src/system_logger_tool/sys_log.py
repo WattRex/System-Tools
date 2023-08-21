@@ -31,7 +31,9 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 class SysLogLoggerC():
     """This function will be called after the system has been called .
     """
-    def __init__(self, file_config_path:str = dir_path+'/logginConfig.conf') -> None:
+    def __init__(self, \
+                 file_config_path:str = dir_path+'/logginConfig.conf', \
+                 file_log_levels: str = '...') -> None:
         #Example: file_config_path = './myLogginConfig.conf'
         '''
         Initialize the main logger.
@@ -49,11 +51,16 @@ class SysLogLoggerC():
             Path(log_folder).mkdir(parents = True, exist_ok = True)
 
         logging.config.fileConfig(file_config_path,disable_existing_loggers=True)
+        if file_log_levels != '...' and os.path.isfile(file_log_levels):
+            logging.getLogger().__setattr__('custom_levels_path', file_log_levels)
+        else:
+            raise FileNotFoundError(f'File "{file_log_levels}" not found. \
+                                        Please, check the path and try again.')
         #, encoding='utf-8'
         for han in logging.getLogger().handlers:
             if isinstance(han, logging.handlers.RotatingFileHandler):
                 han.doRollover()
-        logging.debug('First log message')
+        logging.debug('First log message...')
 
     def __parse_log_folder(self, config_parser) -> str:
         '''
@@ -130,6 +137,13 @@ def sys_log_logger_get_module_logger(name : str,
     Returns:
         log (Logger): Return the log to be used in a specific module file
     '''
+    root_log = logging.getLogger()
+    try:
+        config_by_module_filename = root_log.custom_levels_path
+    except AttributeError as exc:
+        raise ImportError(f'The main logger has not been initialized before "{name}" import. \
+                          Please, initialize the logger before importing any module.') from exc
+
     log = logging.getLogger(name)
     try:
         if name != '__main__': #Main script is not named (__name__) like the other scripts
