@@ -6,11 +6,11 @@ name: Deployment python module to development environment
 on:
   workflow_call:
     inputs:
-      module_name:
+      module-name:
         description: Name of the python deployed module
         required: false
         type: string
-      package_name:
+      package-name:
         description: Name of the package to be compiled
         required: false
         type: string
@@ -38,8 +38,8 @@ jobs:
       - name: Perform QA test and build package
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
-          module-name: ${{ inputs.module_name }}
-          package-name: ${{ inputs.package_name }}
+          module-name: ${{ inputs.module-name }}
+          package-name: ${{ inputs.package-name }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3
