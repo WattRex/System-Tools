@@ -38,7 +38,7 @@ jobs:
             ]
           fi
 
-          if [ -z $${{ inputs.package-name}} ]
+          if [ -z ${{ inputs.package-name}} ]
           then
             echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
           else
