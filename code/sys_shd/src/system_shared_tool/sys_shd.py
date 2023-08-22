@@ -65,7 +65,7 @@ class SysShdSharedObjC:
         attribute and return the mutex control.
 
         Args:
-            new_obj ([type]): Object desired to be shared among threads.
+            new_obj ([Without type, can be any]): Object desired to be shared among threads.
         '''
         self.__mutex.acquire()
         if type(self.__shared_obj) is type(new_obj):
