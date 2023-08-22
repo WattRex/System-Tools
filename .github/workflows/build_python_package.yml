@@ -30,14 +30,14 @@ jobs:
       - name: Set environment variable
         id: vars
         run: |
-          if [ -z "${{ inputs.module-name}}" ]
+          if [[ -z "${{ inputs.module-name}}" ]]
           then
             echo "MODULE_PATH=code" >> $GITHUB_ENV
           else
             echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
           fi
 
-          if [ -z "${{ inputs.package-name}}" ]
+          if [[ -z "${{ inputs.package-name}}" ]]
           then
             echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
           else
