@@ -35,7 +35,6 @@ jobs:
             echo "MODULE_PATH=code" >> $GITHUB_ENV
           else
             echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
-            ]
           fi
 
           if [ -z "${{ inputs.package-name}}" ]
