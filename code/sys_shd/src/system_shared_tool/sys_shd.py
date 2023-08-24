@@ -21,7 +21,7 @@ if __name__ == "__main__":
 log = sys_log.sys_log_logger_get_module_logger(__name__)
 
 #######################       THIRD PARTY IMPORTS        #######################
-
+import posix_ipc as ipc
 #######################          MODULE IMPORTS          #######################
 
 #######################          PROJECT IMPORTS         #######################
@@ -222,7 +222,78 @@ class SysShdChanC(Queue):
         '''
         return self.empty()
 
+class SysShdIpcChanC(ipc.MessageQueue):
+    """A subclass of the SHDChannel class .
 
+    Args:
+        Queue ([type]): [description]
+    """
+    def __init__(self, name: str= "ipc_queue" maxsize: int = DEFAULT_QUEUE_SIZE) -> None:
+        '''
+        Initialize the python Queue subclass used to intercommunicate threads.
+
+        Args:
+            maxsize (int, optional): Queue max size. Defaults to 100
+        '''
+        super().__init__(name='/'+name, flags=ipc.O_CREX, max_messages = maxsize)
+    def delete_until_last(self) -> None:
+        '''
+        Delete all items from the queue, except the last one.
+        '''
+        while self.current_messages() > 0:
+            self.receive(timeout = )
+
+    def receive_data(self) -> object:
+        '''
+        Pop the first element from the queue and return it. If queue is empty,
+        wait until a new element is pushed to the queue.
+
+        Returns:
+            object: The first element of the queue.
+        '''
+        return self.get()
+
+    def receive_data_unblocking(self) -> object:
+        '''
+        Receive data from the queue in unblocking mode.
+
+        Returns:
+            object: Return the first element from the queue if it is not empty.
+            Return None otherwise.
+        '''
+        data = None
+        if not self.is_empty():
+            try:
+                data = self.get_nowait()
+            except Empty:
+                log.warning("Error receiving data from channel")
+        return data
+
+    def send_data(self, data) -> None:
+        '''
+        Push data to the queue .
+
+        Args:
+            data (object): Data to be pushed to the queue.
+
+        Raises:
+            SysShdChanErrorC: Throw an exception if the queue is full.
+        '''
+        try:
+            self.put_nowait(data)
+        except Full as err:
+            log.error(err)
+            raise SysShdChanErrorC(message=f"Data can't be put in queue because it's full\
+                                    with error {err}") from err
+
+    def is_empty(self) -> bool:
+        '''
+        Check if the queue is empty.
+
+        Returns:
+            bool: True if the queue is empty, False otherwise.
+        '''
+        return True if self.current_messages() == 0 else False
 #######################            FUNCTIONS             #######################
 def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> None:
     '''
