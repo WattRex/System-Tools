@@ -45,9 +45,11 @@ class My_Thread(Thread):
 
     def check_1(self, __a: Dummy, __b: Dummy, __c: Dummy) -> None:
         log.debug(f"Test for thread 1: {__a}, {__b}, {__c}")
+        # TODO: implement this
 
     def check_2(self, __a: Dummy, __b: Dummy, __c: Dummy) -> None:
         log.debug(f"Test for thread 2: {__a}, {__b}, {__c}")
+        # TODO: implement this
 
 class TestChannels:
     MAX_PERIOD = 120
@@ -55,7 +57,6 @@ class TestChannels:
 
     def signal_handler(self, sig, frame) -> None:
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
-        self.finish = True
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):
@@ -86,6 +87,6 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[1, 100, 1000]], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[1, 100, 1000], [2, 200, 2000]], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None:
         log.debug(msg=f"1. Test SALG machine statuts: check machine status normal operation")
