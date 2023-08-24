@@ -1,7 +1,7 @@
 # This github action will build a Python package module from source
 ---
 name: Build Python Package
-description: Builds the given package. For this, installs the required packages and pass a QA analysis for PEP8 syntaxis. 
+description: Builds the given package. For this, installs the required packages and pass a QA analysis for PEP8 syntaxis.
 
 author: Marius Crisan
 branding:
@@ -11,38 +11,41 @@ branding:
 inputs:
   module-name:
     description: Name of the module to be compiled
-    required: true
+    required: false
+    type: string
+  package-name:
+    description: Name of the package to be compiled
+    required: false
     type: string
 
 runs:
   using: composite
   steps:
- 
-  - name: Set environment variable
-    id: vars
-    run: |
-      echo "MODULE_PATH=code/${{ inputs.module-name}}" >> $GITHUB_ENV
-    shell: bash
 
   - name: Install module dependencies
     run: |
-      if [ -f "${{ env.MODULE_PATH }}/requirements.txt" ]; then pip install -r ${{ env.MODULE_PATH }}/requirements.txt; fi
+      if [ -f "${{ inputs.module-name }}/requirements.txt" ]; then pip install -r ${{ inputs.module-name }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --rcfile=.vscode/.pylintrc ${{ env.MODULE_PATH }}/
+      pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
+    shell: bash
+
+  - name: Run tests
+    run: |
+      pytest ${{ inputs.module-name }}/tests/*
     shell: bash
 
   - name: Check new version
     id: get-version
     run: |
-      python3 ${{ github.action_path }}/get_version.py ${{ env.MODULE_PATH }}
+      python3 ${{ github.action_path }}/get_version.py ${{ inputs.module-name }}
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ env.MODULE_PATH }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.module-name }}
     shell: bash
     env:
       SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
