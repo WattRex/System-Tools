@@ -6,7 +6,22 @@
          "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
     ],
     "python.autoComplete.extraPaths": ["./code/"],
-    "python.analysis.extraPaths": ["./code/"],
+
+    "python.analysis.extraPaths": [
+        // Add subfolders of code to extrapaths
+        "./code/sys_log",
+        "./code/sys_shd",
+        "./code/sys_conf",
+    ],
+    "editor.inlayHints.enabled": "on",
+
+    // "python.linting.pylintEnabled": true,
+    // "python.linting.enabled": true,
+    // "python.linting.lintOnSave": true,
+    // "python.linting.pylintArgs": [
+    //      "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
+    // ],
+
     "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "basic",
 }

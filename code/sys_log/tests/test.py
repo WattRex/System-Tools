@@ -8,12 +8,13 @@ This will be the main test file where the logger is called"""
 #######################         GENERIC IMPORTS          #######################
 
 #######################      LOGGING CONFIGURATION       #######################
-import system_logger_tool as sys_log
+
+from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
 
 if __name__ == "__main__":
-    cycler_logger = sys_log.SysLogLoggerC() 
+    cycler_logger = SysLogLoggerC()
     # Optional to include custom logginConfig.conf
-log = sys_log.sys_log_logger_get_module_logger(__name__, "log_config.yaml") 
+log: Logger = sys_log_logger_get_module_logger(name=__name__, config_by_module_filename="log_config.yaml")
 # Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################
