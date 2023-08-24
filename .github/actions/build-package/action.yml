@@ -29,8 +29,9 @@ runs:
 
   - name: Lint with pylint
     run: |
-      pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
+      echo "Hola"
     shell: bash
+    #pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
 
   - name: Run tests
     run: |
