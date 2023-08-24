@@ -32,6 +32,11 @@ runs:
       pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
     shell: bash
 
+  - name: Run tests
+    run: |
+      pytest code/${{ inputs.module-name }}/tests/*
+    shell: bash
+
   - name: Check new version
     id: get-version
     run: |
