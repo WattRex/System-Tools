@@ -12,9 +12,9 @@ This will be the main test file where the logger is called"""
 from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
 
 if __name__ == "__main__":
-    cycler_logger = SysLogLoggerC()
+    cycler_logger = SysLogLoggerC(file_log_levels="log_config.yaml")
     # Optional to include custom logginConfig.conf
-log: Logger = sys_log_logger_get_module_logger(name=__name__, config_by_module_filename="log_config.yaml")
+log: Logger = sys_log_logger_get_module_logger(__name__)
 # Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################

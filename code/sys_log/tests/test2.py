@@ -9,23 +9,23 @@ different files and works properly"""
 #######################         GENERIC IMPORTS          #######################
 
 #######################      LOGGING CONFIGURATION       #######################
-import system_logger_tool as sys_log
+from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger
 
 if __name__ == "__main__":
-    cycler_logger = sys_log.SysLogLoggerC()
-log = sys_log.sys_log_logger_get_module_logger(__name__, "log_config.yaml")
+    cycler_logger = SysLogLoggerC(file_log_levels="log_config.yaml")
+log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################          MODULE IMPORTS          #######################
-import test2
+
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
 
-def log_test(algo: float = 12):
+def log_test():
     """
     Test the logger in other files
     """
