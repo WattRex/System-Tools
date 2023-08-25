@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests and pylint with a 
+# This workflow will install Python dependencies, run tests and pylint with a
 # variety of Python versions
 
 name: Deployment python module to development environment
@@ -6,13 +6,17 @@ name: Deployment python module to development environment
 on:
   workflow_call:
     inputs:
-      module_name:
-          description: Name of the python deployed module
-          required: true
-          type: string
+      module-name:
+        description: Name of the python deployed module
+        required: false
+        type: string
+      package-name:
+        description: Name of the package to be compiled
+        required: false
+        type: string
 
 jobs:
-  
+
   call-setup-python:
     runs-on: ubuntu-latest
     strategy:
@@ -23,23 +27,41 @@ jobs:
 
     environment: development
     steps:
-        
+      - name: Set environment variable
+        id: vars
+        run: |
+          if [[ -z "${{ inputs.module-name}}" ]]
+          then
+            echo "MODULE_PATH=code" >> $GITHUB_ENV
+          else
+            echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
+          fi
+
+          if [[ -z "${{ inputs.package-name}}" ]]
+          then
+            echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
+          else
+            echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
+          fi
+        shell: bash
+
       - uses: actions/checkout@v3
 
       - name: Setup python environment
         uses: WattRex/System-Tools/.github/actions/setup-python@develop
-        with: 
+        with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Perform QA test and build package
         uses: WattRex/System-Tools/.github/actions/build-package@develop
-        with: 
-          module-name: ${{ inputs.module_name }}
-      
+        with:
+          module-name: ${{ env.MODULE_PATH }}
+          package-name: ${{ env.PACKAGE_NAME }}
+
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.module_name }}
+          name: ${{ env.PACKAGE_NAME }}
           path: |
             dist
 
