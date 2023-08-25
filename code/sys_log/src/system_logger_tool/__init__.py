@@ -6,5 +6,6 @@ from .sys_log import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
 
 __all__ = [
     'SysLogLoggerC',
-    'sys_log_logger_get_module_logger'
+    'sys_log_logger_get_module_logger',
+    'Logger'
 ]

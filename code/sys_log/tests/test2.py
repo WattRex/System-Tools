@@ -9,7 +9,7 @@ different files and works properly"""
 #######################         GENERIC IMPORTS          #######################
 
 #######################      LOGGING CONFIGURATION       #######################
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger
+from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
 
 if __name__ == "__main__":
     cycler_logger = SysLogLoggerC(file_log_levels="log_config.yaml")
