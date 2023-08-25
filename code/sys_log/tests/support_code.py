@@ -11,15 +11,9 @@ import os
 
 #######################      LOGGING CONFIGURATION       #######################
 sys.path.append(os.getcwd()+'/code/')
-from sys_log.src.system_logger_tool import SysLogLoggerC,\
-    sys_log_logger_get_module_logger, Logger
+from sys_log.src.system_logger_tool import sys_log_logger_get_module_logger, Logger
 
-if __name__ == "__main__":
-    cycler_logger = SysLogLoggerC(file_log_levels=("code/sys_log/src/system_logger_tool/"
-                                                   "example_lvl_config.yaml"))
-    # Optional to include custom logginConfig.conf
 log: Logger = sys_log_logger_get_module_logger(__name__)
-# Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################
 

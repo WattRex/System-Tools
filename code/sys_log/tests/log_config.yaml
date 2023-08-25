@@ -1,0 +1,9 @@
+--- #YAML FILE START
+__main__: "DEBUG"
+
+sys_log.tests: 'DEBUG'
+test_sys_log: 'DEBUG'
+
+file_handlers: {
+  # "log_can" : [ drv.drv_can, drv.drv_epc ],
+}
