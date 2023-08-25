@@ -29,7 +29,7 @@ runs:
 
   - name: Lint with pylint
     run: |
-      pylint --rcfile=.vscode/.pylintrc code/${{ inputs.module-name }}/*
+      pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
     shell: bash
 
   - name: Run tests
