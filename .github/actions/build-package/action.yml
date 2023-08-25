@@ -34,7 +34,7 @@ runs:
 
   - name: Run tests
     run: |
-      pytest ${{ inputs.module-name }}/tests/*
+      pytest ${{ inputs.module-name }}/tests/test*.py
     shell: bash
 
   - name: Check new version
