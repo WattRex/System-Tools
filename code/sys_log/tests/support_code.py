@@ -5,15 +5,21 @@ This will be a secondary test file to prove that the package can be called from
 different files and works properly"""
 
 #######################        MANDATORY IMPORTS         #######################
-
+import sys
+import os
 #######################         GENERIC IMPORTS          #######################
 
 #######################      LOGGING CONFIGURATION       #######################
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
+sys.path.append(os.getcwd()+'/code/')
+from sys_log.src.system_logger_tool import SysLogLoggerC,\
+    sys_log_logger_get_module_logger, Logger
 
 if __name__ == "__main__":
-    cycler_logger = SysLogLoggerC(file_log_levels="log_config.yaml")
+    cycler_logger = SysLogLoggerC(file_log_levels=("code/sys_log/src/system_logger_tool/"
+                                                   "example_lvl_config.yaml"))
+    # Optional to include custom logginConfig.conf
 log: Logger = sys_log_logger_get_module_logger(__name__)
+# Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################
 
