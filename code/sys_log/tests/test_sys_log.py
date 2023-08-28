@@ -4,25 +4,24 @@ This file works as a test for the system logger tool package.
 This will be the main test file where the logger is called"""
 
 #######################        MANDATORY IMPORTS         #######################
-import sys
-import os
+import context #pylint: disable=unused-import
+
 #######################         GENERIC IMPORTS          #######################
 
 #######################      LOGGING CONFIGURATION       #######################
-sys.path.append(os.getcwd()+'/code/') #pylint disable:duplicated-code
-from sys_log.src.system_logger_tool import SysLogLoggerC,\
+from src.system_logger_tool import SysLogLoggerC,\
     sys_log_logger_get_module_logger, Logger
 
-cycler_logger = SysLogLoggerC(file_log_levels=os.getcwd()+
-                              "/code/sys_log/tests/log_config.yaml")
-    # Optional to include custom logginConfig.conf
+cycler_logger = SysLogLoggerC(file_log_levels="./code/sys_log/tests/log_config.yaml")
+
+# Optional to include custom logginConfig.conf
 log: Logger = sys_log_logger_get_module_logger(__name__)
-# Optional to include custom log config yaml
 
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################          MODULE IMPORTS          #######################
-from sys_log.tests.support_code import log_test
+from support_code import log_test
+
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################

@@ -53,7 +53,20 @@ class SysLogLoggerC():
             Path(log_folder).mkdir(parents = True, exist_ok = True)
 
         ## Logging fileconfig
+        print("Fichero leido")
+
+        print(file_config_path)
         fileConfig(fname=file_config_path,disable_existing_loggers=True)
+
+        prev_fmt = Logger.root.handlers[0].formatter
+        # TODO: comprobar que es el root logger
+        if prev_fmt is not None:
+            color_fmt = SysLogCustomFormatterC(fmt=prev_fmt._fmt, style='%',\
+                                               datefmt=prev_fmt.datefmt)
+            Logger.root.handlers[0].setFormatter(color_fmt)
+        # TODO: añadir else y casos de error
+
+        print("Logger configurado")
         if file_log_levels != '...' and os.path.isfile(file_log_levels):
             getLogger().__setattr__('custom_levels_path', file_log_levels)
         else:
