@@ -1,0 +1,12 @@
+--- #YAML FILE START
+
+__main__: "DEBUG" 
+
+##### sys #####
+sys_shd: "CRITICAL"
+sys_conf: "WARNING"
+sys_log: "INFO"
+
+file_handlers: {
+  # "log_can" : [ drv.drv_can, drv.drv_epc ],
+}
