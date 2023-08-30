@@ -5,6 +5,7 @@
     with the hour and the module the message belongs to.
 """
 #######################        MANDATORY IMPORTS         #######################
+from __future__ import annotations
 from pathlib import Path
 import os
 
@@ -12,10 +13,11 @@ import os
 
 
 #######################         GENERIC IMPORTS          #######################
-import logging
-import logging.handlers
-import logging.config
-import configparser
+from logging.config import fileConfig
+from logging.handlers import RotatingFileHandler
+from logging import getLogger, Logger, debug, Formatter, FileHandler,\
+    DEBUG, INFO, WARNING, ERROR, CRITICAL
+from configparser import ConfigParser
 
 #######################       THIRD PARTY IMPORTS        #######################
 from system_config_tool import sys_conf_read_config_params, SysConfSectionNotFoundErrorC
@@ -25,7 +27,7 @@ from system_config_tool import sys_conf_read_config_params, SysConfSectionNotFou
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path: str = os.path.dirname(p=os.path.realpath(filename=__file__))
 
 #######################             CLASSES              #######################
 class SysLogLoggerC():
@@ -43,24 +45,38 @@ class SysLogLoggerC():
         Args:
             file_config_path (str): Path to the yaml file that containg the log configuration
         '''
-        config_parser = configparser.ConfigParser()
-        config_parser.read(file_config_path)
+        config_parser = ConfigParser()
+        config_parser.read(filenames=file_config_path)
         if 'handler_rotatingFileHandler' in config_parser and 'args' \
             in config_parser['handler_rotatingFileHandler']:   # Check if the logConfigFile
             log_folder = self.__parse_log_folder(config_parser)
             Path(log_folder).mkdir(parents = True, exist_ok = True)
 
-        logging.config.fileConfig(file_config_path,disable_existing_loggers=True)
+        ## Logging fileconfig
+        print("Fichero leido")
+
+        print(file_config_path)
+        fileConfig(fname=file_config_path,disable_existing_loggers=True)
+
+        prev_fmt = Logger.root.handlers[0].formatter
+        # TODO: comprobar que es el root logger
+        if prev_fmt is not None:
+            color_fmt = SysLogCustomFormatterC(fmt=prev_fmt._fmt, style='%',\
+                                               datefmt=prev_fmt.datefmt)
+            Logger.root.handlers[0].setFormatter(color_fmt)
+        # TODO: añadir else y casos de error
+
+        print("Logger configurado")
         if file_log_levels != '...' and os.path.isfile(file_log_levels):
-            logging.getLogger().__setattr__('custom_levels_path', file_log_levels)
+            getLogger().__setattr__('custom_levels_path', file_log_levels)
         else:
             raise FileNotFoundError(f'File "{file_log_levels}" not found. \
                                         Please, check the path and try again.')
         #, encoding='utf-8'
-        for han in logging.getLogger().handlers:
-            if isinstance(han, logging.handlers.RotatingFileHandler):
+        for han in getLogger().handlers:
+            if isinstance(han, RotatingFileHandler):
                 han.doRollover()
-        logging.debug('First log message...')
+        debug('First log message...')
 
     def __parse_log_folder(self, config_parser) -> str:
         '''
@@ -78,7 +94,7 @@ class SysLogLoggerC():
         return log_folder[:-1]
 
 
-class SysLogCustomFormatterC(logging.Formatter):
+class SysLogCustomFormatterC(Formatter):
     """Logging colored formatter, adapted from https://stackoverflow.com/a/56944256/3638629"""
 
     grey = '\x1b[38;5;253m'
@@ -97,14 +113,14 @@ class SysLogCustomFormatterC(logging.Formatter):
             datefmt (strorNone, optional): Format used to print the datetime.
             style ([type], optional): Style used to print the log message.
         """
-        super().__init__(fmt, datefmt, style)
-        self.fmt = fmt
-        self.formats = {
-            logging.DEBUG: self.grey + self.fmt + self.reset,
-            logging.INFO: self.blue + self.fmt + self.reset,
-            logging.WARNING: self.yellow + self.fmt + self.reset,
-            logging.ERROR: self.red + self.fmt + self.reset,
-            logging.CRITICAL: self.bold_red + self.fmt + self.reset
+        super().__init__(fmt=fmt, datefmt=datefmt, style=style)
+        self.fmt: str = fmt
+        self.formats: dict[int, str] = {
+            DEBUG: self.grey + self.fmt + self.reset,
+            INFO: self.blue + self.fmt + self.reset,
+            WARNING: self.yellow + self.fmt + self.reset,
+            ERROR: self.red + self.fmt + self.reset,
+            CRITICAL: self.bold_red + self.fmt + self.reset
         }
 
     def format(self, record) -> str:
@@ -117,14 +133,14 @@ class SysLogCustomFormatterC(logging.Formatter):
         Returns:
             [type]: return the record formatted.
         '''
-        log_fmt = self.formats.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
+        log_fmt: str | None = self.formats.get(record.levelno)
+        formatter = Formatter(log_fmt)
         return formatter.format(record)
 
 
 #######################            FUNCTIONS             #######################
 def sys_log_logger_get_module_logger(name : str,
-            config_by_module_filename : str = dir_path+'/log_config.yaml') -> logging.Logger:
+            config_by_module_filename : str = dir_path+'/log_config.yaml') -> Logger:
     '''
     Configures the logger for the given module name and assigns custom logging level defined
     in a .yaml file.
@@ -137,14 +153,14 @@ def sys_log_logger_get_module_logger(name : str,
     Returns:
         log (Logger): Return the log to be used in a specific module file
     '''
-    root_log = logging.getLogger()
+    root_log: Logger = getLogger()
     try:
-        config_by_module_filename = root_log.custom_levels_path
+        config_by_module_filename = root_log.custom_levels_path # type: ignore
     except AttributeError as exc:
         raise ImportError(f'The main logger has not been initialized before "{name}" import. \
                           Please, initialize the logger before importing any module.') from exc
 
-    log = logging.getLogger(name)
+    log: Logger = getLogger(name)
     try:
         if name != '__main__': #Main script is not named (__name__) like the other scripts
             name_list = name.split('.')
@@ -158,7 +174,7 @@ def sys_log_logger_get_module_logger(name : str,
         custom_level = sys_conf_read_config_params(
             filename = config_by_module_filename, section = name)
         log.setLevel(str(custom_level))
-        log.debug(f"log level of {name} has been set to {custom_level}")
+        log.debug(msg=f"log level of {name} has been set to {custom_level}")
 
         # Assign the file handler to the logger
         # if the module name is found in the file_handlers section
@@ -168,13 +184,13 @@ def sys_log_logger_get_module_logger(name : str,
             for module_name in file_handlers[key]:
                 # log.critical(f"module_name: {module_name}")
                 if name == module_name:
-                    file_handler = logging.FileHandler(filename = "./log/" +\
+                    file_handler = FileHandler(filename = "./log/" +\
                                         key + ".log", mode = 'w+', encoding = 'utf-8')
-                    config_parser = configparser.ConfigParser()
+                    config_parser = ConfigParser()
                     config_parser.read("./SYS/SYS_LOG/logginConfig.conf")
                     # if 'formatter_plain' in config_parser and
                     # 'format' in config_parser['handler_rotatingFileHandler']:
-                    file_handler.setFormatter(logging.Formatter(fmt = \
+                    file_handler.setFormatter(Formatter(fmt = \
                                         config_parser.items('formatter_plain', True)[0][1]))
                     file_handler.setLevel("DEBUG")
                     log.addHandler(file_handler)

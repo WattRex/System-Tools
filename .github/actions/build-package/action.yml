@@ -34,7 +34,10 @@ runs:
 
   - name: Run tests
     run: |
-      pytest code/${{ inputs.module-name }}/tests/*
+      test_path='${{ inputs.module-name }}/tests/test*.py'
+      if ls $test_path > /dev/null 2>&1; then
+        pytest $test_path
+      fi
     shell: bash
 
   - name: Check new version

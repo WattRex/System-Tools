@@ -14,7 +14,12 @@
     "python.analysis.inlayHints.callArgumentNames": true,
     "python.autoComplete.extraPaths": ["./code/"],
 
-    "python.analysis.extraPaths": ["./code/"],
+    "python.analysis.extraPaths": [
+        // Add subfolders of code to extrapaths
+        "./code/sys_log",
+        "./code/sys_shd",
+        "./code/sys_conf",
+    ],
     "editor.inlayHints.enabled": "on",
 
     // "python.linting.pylintEnabled": true,

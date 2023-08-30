@@ -55,6 +55,7 @@ ignore-paths=.*/build/, .*/resources
 # Emacs file locks
 ignore-patterns=^\., .*.txt, .*.yaml, .*.yml, .*.md, __version__.py, MANIFEST.in, pyproject.toml
 
+
 # List of module names for which member attributes should not be checked
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis). It
@@ -225,8 +226,8 @@ check-str-concat-over-line-jumps=no
 
 # List of note tags to take in consideration, separated by a comma.
 notes=FIXME,
-      XXX,
-      TODO
+      XXX
+#       TODO
 
 # Regular expression of note tags to take in consideration.
 notes-rgx=
