@@ -29,8 +29,11 @@ from .sys_shd_common import SysShdErrorC
 
 #######################             CLASSES              #######################
 
-DEFAULT_QUEUE_SIZE : int = 500
-DEFAULT_TIMEOUT :   int = 15
+DEFAULT_CHAN_NUM_MSG : int = 100 # Max number of allowed message per chan
+DEFAULT_IPC_MSG_SIZE : int = 100 # Size of message sent through IPC message queue
+# For further information check out README.md
+
+DEFAULT_TIMEOUT :   int = 1
 
 class SysShdChanC(Queue):
     """A subclass of the SHDChannel class .
@@ -39,7 +42,7 @@ class SysShdChanC(Queue):
         Queue ([type]): [description]
     """
 
-    def __init__(self, maxsize: int = DEFAULT_QUEUE_SIZE) -> None:
+    def __init__(self, maxsize: int = DEFAULT_CHAN_NUM_MSG) -> None:
         '''
         Initialize the python Queue subclass used to intercommunicate threads.
 
@@ -114,7 +117,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
     Args:
         Queue ([type]): [description]
     """
-    def __init__(self, name: str= "ipc_queue", maxsize: int = DEFAULT_QUEUE_SIZE) -> None:
+    def __init__(self, name: str= "ipc_queue", max_msg: int = DEFAULT_CHAN_NUM_MSG, max_message_size = DEFAULT_IPC_MSG_SIZE) -> None:
         '''
         Initialize the python Queue subclass used to intercommunicate threads.
 
@@ -124,8 +127,9 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         # Flag O_CREAT-> Open or create a MessageQueue object
         # O_CREAT | O_EXCL (or O_CREX) -> the module creates a new object identified by name.
         # If an object with that name already exists, the call raises an ExistentialError
-        super().__init__(name='/'+name, flags=ipc.O_CREAT, #pylint: disable= c-extension-no-member
-                         max_messages = maxsize)
+        q_name: str = '/'+ name
+        super().__init__(name=q_name, flags=ipc.O_CREAT, #pylint: disable= c-extension-no-member
+                         max_messages = max_msg, max_message_size=max_message_size)
         self.block = True
 
     def delete_until_last(self, timeout: int = DEFAULT_TIMEOUT) -> None:

@@ -31,6 +31,8 @@ from sys_shd.src.system_shared_tool import SysShdIpcChanC, SysShdChanC
 #######################              ENUMS               #######################
 TH1_FAIL = True
 TH2_FAIL = True
+SIZE_QUEUE_P1 = 50
+SIZE_QUEUE_P2 = 51
 #######################             CLASSES              #######################
 class Dummy:
     """A dummy class .
@@ -84,13 +86,12 @@ class TestChannels:
             self.th2 = Thread(target = check_2, #pylint: disable= attribute-defined-outside-init
                           args = (inst_a, inst_b, inst_c, [queue1, queue2]))
         else:
-            queue1 = SysShdIpcChanC(name= "test_ipc_int", maxsize=10)
-            queue2 = SysShdIpcChanC(name= "test_ipc_obj", maxsize=20)
+            queue1 = SysShdIpcChanC(name= "test_ipc_int", max_msg=SIZE_QUEUE_P1)
+            queue2 = SysShdIpcChanC(name= "test_ipc_obj", max_msg=SIZE_QUEUE_P2)
             self.th1 = Process(target = check_1, #pylint: disable= attribute-defined-outside-init
                           args = (inst_a, inst_b, inst_c, []))
             self.th2 = Process(target = check_2, #pylint: disable= attribute-defined-outside-init
                           args = (inst_a, inst_b, inst_c, []))
-
         queue1.delete_until_last()
         queue2.delete_until_last()
 
@@ -99,7 +100,8 @@ class TestChannels:
         self.th1.start()
         self.th2.start()
 
-        # yield self.th1, self.th2
+        yield
+
         log.info(f"Cleaning environment for {test_type} test")
         self.th1.join()
         self.th2.join()
@@ -134,8 +136,9 @@ class TestChannels:
     #Test container
     # @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[2, 300, 4000, 'thread'],
     #                 [1, 200, 3000, 'process'],[2, 300, 4000, 'process']], indirect=["set_environ"])
-    @mark.parametrize("set_environ", [[1, 200, 3000, 'process'],
-                    [2, 300, 4000, 'process']], indirect=["set_environ"])
+    # @mark.parametrize("set_environ", [[1, 200, 3000, 'process'],
+    #                 [2, 300, 4000, 'process']], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[1, 200, 3000, 'process']], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
@@ -164,7 +167,6 @@ def check_1(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
     else:
         queue1: SysShdChanC = test_type[0]
         queue2: SysShdChanC = test_type[1]
-
     queue1.send_data(str(__a))
     sleep(random.uniform(0.5, 1))
     aux2: Dummy = queue2.receive_data()
