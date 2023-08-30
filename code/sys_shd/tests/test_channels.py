@@ -31,8 +31,8 @@ from sys_shd.src.system_shared_tool import SysShdIpcChanC, SysShdChanC
 #######################              ENUMS               #######################
 TH1_FAIL = True
 TH2_FAIL = True
-SIZE_QUEUE_P1 = 50
-SIZE_QUEUE_P2 = 51
+SIZE_QUEUE_P1 = 9
+SIZE_QUEUE_P2 = 9
 #######################             CLASSES              #######################
 class Dummy:
     """A dummy class .
