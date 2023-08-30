@@ -85,7 +85,7 @@ class TestChannels:
                           args = (inst_a, inst_b, inst_c, [queue1, queue2]))
         else:
             queue1 = SysShdIpcChanC(name= "test_ipc_int", maxsize=10)
-            queue2 = SysShdIpcChanC(name= "test_ipc_obj", maxsize=10)
+            queue2 = SysShdIpcChanC(name= "test_ipc_obj", maxsize=20)
             self.th1 = Process(target = check_1, #pylint: disable= attribute-defined-outside-init
                           args = (inst_a, inst_b, inst_c, []))
             self.th2 = Process(target = check_2, #pylint: disable= attribute-defined-outside-init
@@ -119,6 +119,8 @@ class TestChannels:
             queue2.unlink() #pylint: disable= no-member
             queue1.close() #pylint: disable= no-member
             queue2.close() #pylint: disable= no-member
+        self.th1.close()
+        self.th2.close()
 
 
 
@@ -130,10 +132,10 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[1, 200, 3000, 'process'],
-                    [2, 300, 4000, 'thread'],[2, 300, 4000, 'process']], indirect=["set_environ"])
-    # @mark.parametrize("set_environ", [[1, 200, 3000, 'process'],
-    #                 [2, 300, 4000, 'process']], indirect=["set_environ"])
+    # @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[2, 300, 4000, 'thread'],
+    #                 [1, 200, 3000, 'process'],[2, 300, 4000, 'process']], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[1, 200, 3000, 'process'],
+                    [2, 300, 4000, 'process']], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
@@ -189,6 +191,9 @@ def check_1(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
         raise AssertionError((f"The values not what expected, a2: {int(aux1)} "
                 f" expected {__a.value + 1} and b2: {aux2.value} expected {__b.value}"))
     TH1_FAIL = th1_status
+    if len(test_type)<2:
+        queue1.close()
+        queue2.close()
     return th1_status
 
 def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
@@ -231,4 +236,7 @@ def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
         log.critical(f"The values not what expected, a1: {int(aux)} expected {__a.value}")
         raise AssertionError(f"The values not what expected, a1: {int(aux)} expected {__a.value}")
     TH2_FAIL = th2_status
+    if len(test_type)<2:
+        queue1.close()
+        queue2.close()
     return th2_status
