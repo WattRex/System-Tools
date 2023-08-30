@@ -121,10 +121,6 @@ class TestChannels:
             queue2.unlink() #pylint: disable= no-member
             queue1.close() #pylint: disable= no-member
             queue2.close() #pylint: disable= no-member
-        self.th1.close()
-        self.th2.close()
-
-
 
     @fixture(scope="function")
     def config(self) -> None:
@@ -134,11 +130,9 @@ class TestChannels:
 
 
     #Test container
-    # @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[2, 300, 4000, 'thread'],
-    #                 [1, 200, 3000, 'process'],[2, 300, 4000, 'process']], indirect=["set_environ"])
-    # @mark.parametrize("set_environ", [[1, 200, 3000, 'process'],
-    #                 [2, 300, 4000, 'process']], indirect=["set_environ"])
-    @mark.parametrize("set_environ", [[1, 200, 3000, 'process']], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[2, 300, 4000,\
+                'thread'], [1, 200, 3000, 'process'],[2, 300, 4000, 'process']],\
+                indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 

@@ -117,7 +117,8 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
     Args:
         Queue ([type]): [description]
     """
-    def __init__(self, name: str= "ipc_queue", max_msg: int = DEFAULT_CHAN_NUM_MSG, max_message_size = DEFAULT_IPC_MSG_SIZE) -> None:
+    def __init__(self, name: str= "ipc_queue", max_msg: int = DEFAULT_CHAN_NUM_MSG,\
+                max_message_size = DEFAULT_IPC_MSG_SIZE) -> None:
         '''
         Initialize the python Queue subclass used to intercommunicate threads.
 
