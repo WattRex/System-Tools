@@ -106,7 +106,7 @@ class TestChannels:
         self.th1.join()
         self.th2.join()
         if not 'thread' in test_type:
-            TH1_FAIL=self.th1.exitcode
+            TH1_FAIL = self.th1.exitcode
             TH2_FAIL = self.th2.exitcode
         log.info(f"{test_type} info, 1: {TH1_FAIL}, 2: {TH2_FAIL}")
         if TH1_FAIL or TH2_FAIL:
@@ -117,10 +117,8 @@ class TestChannels:
         queue1.delete_until_last()
         queue2.delete_until_last()
         if isinstance(queue1,SysShdIpcChanC) and isinstance(queue2,SysShdIpcChanC):
-            queue1.unlink() #pylint: disable= no-member
-            queue2.unlink() #pylint: disable= no-member
-            queue1.close() #pylint: disable= no-member
-            queue2.close() #pylint: disable= no-member
+            queue1.terminate() #pylint: disable= no-member
+            queue2.terminate() #pylint: disable= no-member
 
     @fixture(scope="function")
     def config(self) -> None:

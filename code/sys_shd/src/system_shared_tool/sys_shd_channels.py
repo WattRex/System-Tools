@@ -209,3 +209,9 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
             bool: True if the queue is empty, False otherwise.
         '''
         return self.current_messages == 0
+
+    def terminate(self) -> None:
+        """Terminate the queue .
+        """
+        self.close()
+        self.unlink()
