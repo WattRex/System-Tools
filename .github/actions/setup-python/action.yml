@@ -18,7 +18,10 @@ runs:
   using: composite
 
   steps:
-  - uses: actions/checkout@v3
+  - uses: actions/checkout@v4.0.0
+    with:
+      fetch-depth: 10
+      fetch-tags: true
   
   - name: Set up Python ${{ inputs.python-version }}
     uses: actions/setup-python@v3
