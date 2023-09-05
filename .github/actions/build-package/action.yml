@@ -40,6 +40,11 @@ runs:
       fi
     shell: bash
 
+  - name: Check git tags
+    run: |
+      echo "Git tags: $(git tag)"
+    shell: bash     
+    
   - name: Check new version
     id: get-version
     run: |
