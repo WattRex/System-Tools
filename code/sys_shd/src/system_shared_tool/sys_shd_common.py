@@ -55,7 +55,7 @@ class SysShdNodeC(Thread):
         self.working_flag: Event = working_flag
         self.cycle_period: float = cycle_period
 
-    def update_local_data(self) -> None:
+    def sync_shd_data(self) -> None:
         """Function to be implemented in the inherited class
         """
 
@@ -80,7 +80,6 @@ class SysShdNodeC(Thread):
         while self.working_flag.isSet():
             try:
                 tic = time()
-                self.update_local_data()
                 self.process_iteration()
                 wait(tic, self.cycle_period)
             except Exception as err: #pylint: disable= broad-exception-caught
