@@ -186,8 +186,10 @@ def check_1(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
                 f" expected {__a.value + 1} and b2: {aux2.value} expected {__b.value}"))
     TH1_FAIL = th1_status
     if len(test_type)<2:
-        queue1.close()
-        queue2.close()
+        # queue1.close()
+        # queue2.close(
+        queue1.terminate()
+        queue2.terminate()
     return th1_status
 
 def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
@@ -231,6 +233,8 @@ def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
         raise AssertionError(f"The values not what expected, a1: {int(aux)} expected {__a.value}")
     TH2_FAIL = th2_status
     if len(test_type)<2:
-        queue1.close()
-        queue2.close()
+        # queue1.close()
+        # queue2.close(
+        queue1.terminate()
+        queue2.terminate()
     return th2_status
