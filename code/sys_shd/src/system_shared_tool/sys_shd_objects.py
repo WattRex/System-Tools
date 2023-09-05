@@ -8,29 +8,27 @@ for each channel.
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
-from queue import Queue, Empty, Full
 from copy import deepcopy
 from threading import Condition
 from typing import List
 
-#######################      LOGGING CONFIGURATION       #######################
-import system_logger_tool as sys_log
+
+#######################      SYSTEM ABSTRACTION IMPORTS  #######################
+from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
 if __name__ == "__main__":
-    cycler_logger = sys_log.SysLogLoggerC()
-log = sys_log.sys_log_logger_get_module_logger(__name__)
+    cycler_logger = SysLogLoggerC()
+log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################          MODULE IMPORTS          #######################
-
+from .sys_shd_common import SysShdErrorC
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-
-DEFAULT_QUEUE_SIZE : int = 1000
 
 class SysShdSharedObjC:
     """Class method for creating a class that is used by the sharedObj .
@@ -132,97 +130,6 @@ class SysShdSharedObjC:
 
         return new_obj
 
-class SysShdChanErrorC(Exception):
-    """Internal exception handler .
-
-    Args:
-        Exception ([type]): [description]
-    """
-    def __init__(self, message) -> None:
-        '''
-        Exception raised for errors when a queue is full and data has tried to be put in it.
-
-        Args:
-            message (str): explanation of the error
-        '''
-        super().__init__(message)
-
-class SysShdChanC(Queue):
-    """A subclass of the SHDChannel class .
-
-    Args:
-        Queue ([type]): [description]
-    """
-
-    def __init__(self, maxsize: int = DEFAULT_QUEUE_SIZE) -> None:
-        '''
-        Initialize the python Queue subclass used to intercommunicate threads.
-
-        Args:
-            maxsize (int, optional): Queue max size. Defaults to 100
-        '''
-        super().__init__(maxsize = maxsize)
-
-    def delete_until_last(self) -> None:
-        '''
-        Delete all items from the queue, except the last one.
-        '''
-        while self.qsize() > 1:
-            self.get()
-
-    def receive_data(self) -> object:
-        '''
-        Pop the first element from the queue and return it. If queue is empty,
-        wait until a new element is pushed to the queue.
-
-        Returns:
-            object: The first element of the queue.
-        '''
-        return self.get()
-
-    def receive_data_unblocking(self) -> object:
-        '''
-        Receive data from the queue in unblocking mode.
-
-        Returns:
-            object: Return the first element from the queue if it is not empty.
-            Return None otherwise.
-        '''
-        data = None
-        if not self.is_empty():
-            try:
-                data = self.get_nowait()
-            except Empty:
-                log.warning("Error receiving data from channel")
-        return data
-
-    def send_data(self, data) -> None:
-        '''
-        Push data to the queue .
-
-        Args:
-            data (object): Data to be pushed to the queue.
-
-        Raises:
-            SysShdChanErrorC: Throw an exception if the queue is full.
-        '''
-        try:
-            self.put_nowait(data)
-        except Full as err:
-            log.error(err)
-            raise SysShdChanErrorC(message=f"Data can't be put in queue because it's full\
-                                    with error {err}") from err
-
-    def is_empty(self) -> bool:
-        '''
-        Check if the queue is empty.
-
-        Returns:
-            bool: True if the queue is empty, False otherwise.
-        '''
-        return self.empty()
-
-
 #######################            FUNCTIONS             #######################
 def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> None:
     '''
@@ -255,4 +162,4 @@ def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> Non
                 setattr(dst_obj, attribs[0], getattr(src_obj, attribs[0]))
     else:
         log.error(f"New object doesn't have attribute: {attribs[0]}")
-        raise SysShdChanErrorC(message=f"New object doesn't have attribute: {attribs[0]}")
+        raise SysShdErrorC(message=f"New object doesn't have attribute: {attribs[0]}")

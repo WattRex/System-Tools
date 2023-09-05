@@ -1,1 +1,4 @@
-system_logger_tool>=0.0.2
+posix-ipc>=1.1.1
+PyYAML>=6.0.1
+system-config-tool>=0.0.4
+system-logger-tool>=0.0.3
