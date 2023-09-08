@@ -51,7 +51,7 @@ class SysShdNodeC(Thread):
         Args:
             cycle_period (int): [Period in ms]
             working_flag (Event): [description]
-            node_params (SysShdNodeParamsC, optional): [description]. Defaults to SysShdNodeParamsC().
+            node_params (SysShdNodeParamsC, optional): .Defaults to SysShdNodeParamsC().
         """
         super().__init__(group = None, target = node_params.target, name = node_params.name,
                          args = node_params.args, kwargs = node_params.kwargs,
