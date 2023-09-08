@@ -28,6 +28,7 @@ wattrex_driver_epc: 'ERROR'
 sys_shd.src.system_shared_tool: 'INFO'
 
 ##### testing #####
+test_shd_node: 'DEBUG'
 test_shd: 'DEBUG'
 test_log: 'DEBUG'
 test_conf: 'DEBUG'

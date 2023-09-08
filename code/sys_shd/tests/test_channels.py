@@ -19,7 +19,7 @@ from pytest import fixture, mark
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
 main_logger = SysLogLoggerC(file_log_levels="code/sys_shd/tests/log_config.yaml")
-log: Logger = sys_log_logger_get_module_logger(name="test_shd")
+log: Logger = sys_log_logger_get_module_logger(name="test_shd_chanel")
 
 #######################       THIRD PARTY IMPORTS        #######################
 

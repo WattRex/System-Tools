@@ -211,17 +211,14 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         return self.current_messages == 0
 
     def terminate(self) -> None:
-        """Terminate the queue .
+        """Terminate the queue.
         """
-        closed = False
         try:
             self.close()
-            closed = True
-        except ipc.ExistentialError as err:
-            log.error(f"Trying to close queue {self.name} with error {err}")
-        if closed:
             try:
                 self.unlink()
             except ipc.ExistentialError as err:
                 log.error((f"Trying to unlink queue {self.name} with error {err}, "
                         "it may have been already unlinked"))
+        except ipc.ExistentialError as err:
+            log.error(f"Trying to close queue {self.name} with error {err}")

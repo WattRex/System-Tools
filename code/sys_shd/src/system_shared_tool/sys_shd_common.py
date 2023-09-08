@@ -8,7 +8,7 @@ from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from threading import Thread, Event
 from typing import Any, Iterable, Callable, Mapping
-from time import time
+from time import time, sleep
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
@@ -25,7 +25,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################             CLASSES              #######################
 
-class SysShdParamsC:
+class SysShdNodeParamsC:
     """
     Class that contains the can parameters in order to create the thread correctly
     """
@@ -44,11 +44,15 @@ class SysShdNodeC(Thread):
     Args:
         Thread ([type]): [description]
     """
-    def __init__(self, cycle_period: float, working_flag : Event,
-                 node_params: SysShdParamsC = SysShdParamsC()) -> None:
-        '''
-        Initialize the thread node.
-        '''
+    def __init__(self, cycle_period: int, working_flag : Event,
+                 node_params: SysShdNodeParamsC = SysShdNodeParamsC()) -> None:
+        """Initialize the node .
+
+        Args:
+            cycle_period (int): [Period in ms]
+            working_flag (Event): [description]
+            node_params (SysShdNodeParamsC, optional): [description]. Defaults to SysShdNodeParamsC().
+        """
         super().__init__(group = None, target = node_params.target, name = node_params.name,
                          args = node_params.args, kwargs = node_params.kwargs,
                          daemon = node_params.daemon)
@@ -65,11 +69,9 @@ class SysShdNodeC(Thread):
 
     def stop(self) -> None:
         """
-        Stop the node thread .
+        Function to be implemented in the inherited class,
+        it will execute when finishing the thread.
         """
-        log.critical("Stopping node thread.")
-        self.join()
-        self.working_flag.clear()
 
     def run(self) -> None:
         '''
@@ -81,7 +83,9 @@ class SysShdNodeC(Thread):
             try:
                 tic = time()
                 self.process_iteration()
-                wait(tic, self.cycle_period)
+                end_tick = time()
+                waiting_ms = self.cycle_period-int(end_tick-tic)
+                sleep(waiting_ms/1000)
             except Exception as err: #pylint: disable= broad-exception-caught
                 log.error(f"Error  in node {err}")
                 raise SysShdErrorC(err) from err
@@ -102,14 +106,3 @@ class SysShdErrorC(Exception):
             message (str): explanation of the error
         '''
         super().__init__(message)
-
-#######################            FUNCTIONS             #######################
-def wait(tic: float, sleep_time: float) -> None:
-    """Wait until the sleep time is reached.
-
-    Args:
-        tic ([float]): [description]
-        sleep_time ([float]): [Period in seconds]
-    """
-    while time()-tic <= sleep_time:
-        pass
