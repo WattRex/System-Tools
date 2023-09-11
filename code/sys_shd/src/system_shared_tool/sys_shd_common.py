@@ -61,16 +61,19 @@ class SysShdNodeC(Thread):
     def sync_shd_data(self) -> None:
         """Function to be implemented in the inherited class
         """
+        raise NotImplementedError()
 
     def process_iteration(self) -> None:
         """Function to be implemented in the inherited class
         """
+        raise NotImplementedError()
 
     def stop(self) -> None:
         """
         Function to be implemented in the inherited class,
         it will execute when finishing the thread.
         """
+        raise NotImplementedError()
 
     def run(self) -> None:
         '''
@@ -80,11 +83,15 @@ class SysShdNodeC(Thread):
         log.info("Start running process")
         while self.working_flag.isSet():
             try:
-                tic = time()
+                next_time = time()+self.cycle_period
                 self.process_iteration()
-                end_tick = time()
-                waiting_ms = self.cycle_period-int(end_tick-tic)
-                sleep(waiting_ms/1000)
+                # 5.0 Sleep the remaining time
+                sleep_time = next_time-int(time())
+                if sleep_time < 100:
+                    log.critical(f"Real time error, cycle time exhausted: {sleep_time}")
+                else:
+                    sleep(sleep_time/1000)
+
             except Exception as err: #pylint: disable= broad-exception-caught
                 log.error(f"Error  in node {err}")
                 raise SysShdErrorC(err) from err

@@ -39,6 +39,10 @@ class DummyNode(SysShdNodeC):
         super().__init__(name, cycle_period, working_flag, meas_params)
         self.working_flag = working_flag
         self.value = 0
+    def stop(self) -> None:
+        """Stop the node .
+        """
+        log.info(msg="Stopping DummyNode")
 
     def process_iteration(self) -> None:
         """Update the value of the loop iteration .
