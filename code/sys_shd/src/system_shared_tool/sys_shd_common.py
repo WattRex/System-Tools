@@ -24,7 +24,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-
+_TO_MS = 1000
 class SysShdNodeParamsC:
     """
     Class that contains the can parameters in order to create the thread correctly
@@ -85,12 +85,14 @@ class SysShdNodeC(Thread):
             try:
                 next_time = time()+self.cycle_period
                 self.process_iteration()
-                # 5.0 Sleep the remaining time
+                # Sleep the remaining time
                 sleep_time = next_time-int(time())
+                # sleep_time is measure in miliseconds
                 if sleep_time < 100:
                     log.critical(f"Real time error, cycle time exhausted: {sleep_time}")
                 else:
-                    sleep(sleep_time/1000)
+                    # sleep function works in seconds, needed conversion from ms to s
+                    sleep(sleep_time/_TO_MS)
 
             except Exception as err: #pylint: disable= broad-exception-caught
                 log.error(f"Error  in node {err}")
