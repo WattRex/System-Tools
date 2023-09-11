@@ -30,10 +30,9 @@ class SysShdNodeParamsC:
     Class that contains the can parameters in order to create the thread correctly
     """
     def __init__(self, target: Callable[..., object] | None = ...,
-        name: str | None = ..., args: Iterable[Any] = ...,
+        args: Iterable[Any] = ...,
         kwargs: Mapping[str, Any] | None = ..., *, daemon: bool | None = ...):
         self.target = target
-        self.name = name
         self.args = args
         self.kwargs = kwargs
         self.daemon = daemon
@@ -44,7 +43,7 @@ class SysShdNodeC(Thread):
     Args:
         Thread ([type]): [description]
     """
-    def __init__(self, cycle_period: int, working_flag : Event,
+    def __init__(self,name: str, cycle_period: int, working_flag : Event,
                  node_params: SysShdNodeParamsC = SysShdNodeParamsC()) -> None:
         """Initialize the node .
 
@@ -53,7 +52,7 @@ class SysShdNodeC(Thread):
             working_flag (Event): [description]
             node_params (SysShdNodeParamsC, optional): .Defaults to SysShdNodeParamsC().
         """
-        super().__init__(group = None, target = node_params.target, name = node_params.name,
+        super().__init__(group = None, target = node_params.target, name = name,
                          args = node_params.args, kwargs = node_params.kwargs,
                          daemon = node_params.daemon)
         self.working_flag: Event = working_flag

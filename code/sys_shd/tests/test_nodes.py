@@ -31,12 +31,12 @@ from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC
 class DummyNode(SysShdNodeC):
     """A dummy class .
     """
-    def __init__(self, cycle_period: int, working_flag : Event,
+    def __init__(self,name: int, cycle_period: int, working_flag : Event,
                  meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the thread node used to update measurements from devices.
         '''
-        super().__init__(cycle_period, working_flag, meas_params)
+        super().__init__(name, cycle_period, working_flag, meas_params)
         self.working_flag = working_flag
         self.value = 0
 
@@ -73,7 +73,8 @@ class TestChannels:
         """
         log.info(msg=f"Setting up the environment Node test period {request.param[0]}ms")
         __working_node = Event()
-        node = DummyNode(cycle_period=request.param[0], working_flag= __working_node)
+        node = DummyNode(name= 'dummyNode', cycle_period=request.param[0],
+                         working_flag= __working_node)
         __working_node.set()
         node.start()
         while node.value < 10:
