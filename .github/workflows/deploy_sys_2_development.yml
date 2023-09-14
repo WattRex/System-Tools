@@ -5,36 +5,36 @@ name: Deployment of system tools modules to development env
 on:
   push:
     branches: [ "sys_conf", "sys_log", "sys_shd" ]
-  
+
   pull_request_review:
-    # types: [edited]
-    review:
-      state: [approved]
+    types: [submitted]
+    # review:
+    #   state: [approved]
     pull_request:
       base:
-        ref: [ "sys_conf", "sys_log", "sys_shd" ] 
+        ref: [ "sys_conf", "sys_log", "sys_shd" ]
 
-        
+
 jobs:
-  
+
   build-package-on-push:
     if: ${{ github.event_name == 'push'}}
     name: Build package ${{ github.ref_name }}
     uses: ./.github/workflows/build_python_package.yml
     with:
       module-name: ${{ github.ref_name }}
-  
+
   build-package-on-pull-request:
-    if: ${{ github.event_name == 'pull_request_review' }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' }}
     name: Build package  ${{ github.event.pull_request.head.ref }}
     uses: ./.github/workflows/build_python_package.yml
     with:
       module-name: ${{ github.event.pull_request.head.ref }}
-    
+
   publish-package:
-    
+
     name: Publish package ${{ github.event.pull_request.head.ref }} to PyPi
-    if: ${{ github.event_name == 'pull_request_review' }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' }}
     needs: build-package-on-pull-request
     runs-on: ubuntu-latest
     environment: development
