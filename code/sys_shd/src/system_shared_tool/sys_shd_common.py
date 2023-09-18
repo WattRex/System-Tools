@@ -4,7 +4,9 @@ This module has the common classes in system shared.
 """
 
 #######################        MANDATORY IMPORTS         #######################
-from __future__ import annotations
+import sys
+if sys.version_info < (3, 8):
+    from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from threading import Thread, Event
 from typing import Any, Iterable, Callable, Mapping
