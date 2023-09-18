@@ -19,7 +19,7 @@ from pytest import fixture, mark
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
 main_logger = SysLogLoggerC(file_log_levels="code/sys_shd/tests/log_config.yaml")
-log: Logger = sys_log_logger_get_module_logger(name="test_shd")
+log: Logger = sys_log_logger_get_module_logger(name="test_shd_chanel")
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -106,7 +106,7 @@ class TestChannels:
         self.th1.join()
         self.th2.join()
         if not 'thread' in test_type:
-            TH1_FAIL=self.th1.exitcode
+            TH1_FAIL = self.th1.exitcode
             TH2_FAIL = self.th2.exitcode
         log.info(f"{test_type} info, 1: {TH1_FAIL}, 2: {TH2_FAIL}")
         if TH1_FAIL or TH2_FAIL:
@@ -117,10 +117,8 @@ class TestChannels:
         queue1.delete_until_last()
         queue2.delete_until_last()
         if isinstance(queue1,SysShdIpcChanC) and isinstance(queue2,SysShdIpcChanC):
-            queue1.unlink() #pylint: disable= no-member
-            queue2.unlink() #pylint: disable= no-member
-            queue1.close() #pylint: disable= no-member
-            queue2.close() #pylint: disable= no-member
+            queue1.terminate() #pylint: disable= no-member
+            queue2.terminate() #pylint: disable= no-member
 
     @fixture(scope="function")
     def config(self) -> None:
@@ -188,8 +186,10 @@ def check_1(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
                 f" expected {__a.value + 1} and b2: {aux2.value} expected {__b.value}"))
     TH1_FAIL = th1_status
     if len(test_type)<2:
-        queue1.close()
-        queue2.close()
+        # queue1.close()
+        # queue2.close(
+        queue1.terminate()
+        queue2.terminate()
     return th1_status
 
 def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
@@ -233,6 +233,8 @@ def check_2(__a: Dummy, __b: Dummy, __c: Dummy, test_type: list) -> bool:
         raise AssertionError(f"The values not what expected, a1: {int(aux)} expected {__a.value}")
     TH2_FAIL = th2_status
     if len(test_type)<2:
-        queue1.close()
-        queue2.close()
+        # queue1.close()
+        # queue2.close(
+        queue1.terminate()
+        queue2.terminate()
     return th2_status
