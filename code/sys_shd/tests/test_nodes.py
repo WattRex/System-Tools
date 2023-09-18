@@ -28,7 +28,7 @@ from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class DummyNode(SysShdNodeC):
+class DummyNode(SysShdNodeC): #pylint: disable= abstract-method
     """A dummy class .
     """
     def __init__(self,name: int, cycle_period: int, working_flag : Event,
