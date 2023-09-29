@@ -93,6 +93,7 @@ class SysShdNodeC(Thread):
         and store it on the corresponding chan.
         '''
         log.info("Start running process")
+        self.status = SysShdNodeStateE.INIT
         while self.working_flag.is_set():
             try:
                 next_time = time()+self.cycle_period/_TO_MS
