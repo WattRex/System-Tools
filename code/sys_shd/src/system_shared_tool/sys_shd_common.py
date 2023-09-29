@@ -27,7 +27,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################             CLASSES              #######################
 _TO_MS = 1000
 
-class SysShdNodeStateE(Enum):
+class SysShdNodeStatusE(Enum):
     """Enum class for the node state
     """
     COMM_ERROR = -1
@@ -68,7 +68,7 @@ class SysShdNodeC(Thread):
                          daemon = node_params.daemon)
         self.working_flag: Event = working_flag
         self.cycle_period: int = cycle_period
-        self.status: SysShdNodeStateE = SysShdNodeStateE.STOP
+        self.status: SysShdNodeStatusE = SysShdNodeStatusE.STOP
 
     def sync_shd_data(self) -> None:
         """Function to be implemented in the inherited class
@@ -93,7 +93,7 @@ class SysShdNodeC(Thread):
         and store it on the corresponding chan.
         '''
         log.info("Start running process")
-        self.status = SysShdNodeStateE.INIT
+        self.status = SysShdNodeStatusE.INIT
         while self.working_flag.is_set():
             try:
                 next_time = time()+self.cycle_period/_TO_MS
