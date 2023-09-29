@@ -22,7 +22,7 @@ log: Logger = sys_log_logger_get_module_logger(name="test_shd_node")
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/')
-from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC, SysShdNodeStateE
+from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC, SysShdNodeStatusE
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -42,18 +42,18 @@ class DummyNode(SysShdNodeC): #pylint: disable= abstract-method
     def stop(self) -> None:
         """Stop the node .
         """
-        self.status = SysShdNodeStateE.STOP
+        self.status = SysShdNodeStatusE.STOP
         log.info(msg=f"Stopping DummyNode, state: {self.status}")
 
     def process_iteration(self) -> None:
         """Update the value of the loop iteration .
         """
         if self.value < 3:
-            self.status = SysShdNodeStateE.INIT
+            self.status = SysShdNodeStatusE.INIT
         elif self.value == 5:
             sleep(2)
         else:
-            self.status = SysShdNodeStateE.OK
+            self.status = SysShdNodeStatusE.OK
         self.value += 1
 
         log.info(msg=f"DummyNode value: {self.value}, state: {self.status}")
