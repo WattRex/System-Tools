@@ -22,7 +22,7 @@ log: Logger = sys_log_logger_get_module_logger(name="test_shd_node")
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/')
-from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC
+from sys_shd.src.system_shared_tool import SysShdNodeC, SysShdNodeParamsC, SysShdNodeStateE
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -42,13 +42,21 @@ class DummyNode(SysShdNodeC): #pylint: disable= abstract-method
     def stop(self) -> None:
         """Stop the node .
         """
-        log.info(msg="Stopping DummyNode")
+        self.status = SysShdNodeStateE.STOP
+        log.info(msg=f"Stopping DummyNode, state: {self.status}")
 
     def process_iteration(self) -> None:
         """Update the value of the loop iteration .
         """
+        if self.value < 3:
+            self.status = SysShdNodeStateE.INIT
+        elif self.value == 5:
+            sleep(2)
+        else:
+            self.status = SysShdNodeStateE.OK
         self.value += 1
-        log.info(msg=f"DummyNode value: {self.value}")
+
+        log.info(msg=f"DummyNode value: {self.value}, state: {self.status}")
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -64,6 +72,7 @@ class TestChannels:
             frame ([type]): [description]
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
+        sys.exit(0)
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):

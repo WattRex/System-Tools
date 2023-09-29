@@ -25,7 +25,7 @@ can_sniffer: 'ERROR'
 wattrex_driver_epc: 'ERROR'
 
 ##### sys #####
-sys_shd.src.system_shared_tool: 'INFO'
+sys_shd.src.system_shared_tool: 'DEBUG'
 
 ##### testing #####
 test_shd_node: 'DEBUG'
