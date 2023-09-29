@@ -125,6 +125,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         Args:
             maxsize (int, optional): Queue max size. Defaults to 100
         '''
+        log.debug(f"Creating IPC queue with name {name}")
         # Flag O_CREAT-> Open or create a MessageQueue object
         # O_CREAT | O_EXCL (or O_CREX) -> the module creates a new object identified by name.
         # If an object with that name already exists, the call raises an ExistentialError
