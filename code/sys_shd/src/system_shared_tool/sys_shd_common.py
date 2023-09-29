@@ -6,7 +6,7 @@ This module has the common classes in system shared.
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
-from threading import Thread, Event, current_thread
+from threading import Thread, Event
 from typing import Any, Iterable, Callable, Mapping
 from enum import Enum
 from time import time, sleep
