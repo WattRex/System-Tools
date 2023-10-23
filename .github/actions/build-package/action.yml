@@ -13,10 +13,6 @@ inputs:
     description: Name of the module to be compiled
     required: false
     type: string
-  package-name:
-    description: Name of the package to be compiled
-    required: false
-    type: string
 
 runs:
   using: composite
