@@ -33,13 +33,6 @@ jobs:
 
     environment: development
     steps:
-      - name: Set environment variable
-        id: vars
-        run: |
-          echo "MODULE_PATH=code/${{ inputs.package-path }}" >> $GITHUB_ENV
-          echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
-        shell: bash
-
       - uses: actions/checkout@v3
 
       - name: Setup python environment
@@ -50,12 +43,12 @@ jobs:
       - name: Perform QA test and build package
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
-          module-name: ${{ env.MODULE_PATH }}
+          module-name: ${{ inputs.package-path }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.PACKAGE_NAME }}
+          name: ${{ inputs.package-name }}
           path: |
             dist
 
