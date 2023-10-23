@@ -6,13 +6,13 @@ name: Deployment python module to development environment
 on:
   workflow_call:
     inputs:
-      module-name:
-        description: Name of the python deployed module
-        required: false
-        type: string
       package-name:
-        description: Name of the package to be compiled
-        required: false
+        description: Name of the python package
+        required: true
+        type: string
+      package-path:
+        description: Path of the package to be compiled
+        required: true
         type: string
       python-version:
         description: Python version to use in python environment setup for QA test and build package.
@@ -36,19 +36,8 @@ jobs:
       - name: Set environment variable
         id: vars
         run: |
-          if [[ -z "${{ inputs.module-name}}" ]]
-          then
-            echo "MODULE_PATH=code" >> $GITHUB_ENV
-          else
-            echo "MODULE_PATH=code/${{ inputs.module-name }}" >> $GITHUB_ENV
-          fi
-
-          if [[ -z "${{ inputs.package-name}}" ]]
-          then
-            echo "PACKAGE_NAME=${{ inputs.module-name }}" >> $GITHUB_ENV
-          else
-            echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
-          fi
+          echo "MODULE_PATH=code/${{ inputs.package-path }}" >> $GITHUB_ENV
+          echo "PACKAGE_NAME=${{ inputs.package-name }}" >> $GITHUB_ENV
         shell: bash
 
       - uses: actions/checkout@v3
@@ -62,7 +51,6 @@ jobs:
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
           module-name: ${{ env.MODULE_PATH }}
-          package-name: ${{ env.PACKAGE_NAME }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3
