@@ -13,6 +13,11 @@ inputs:
     description: Name of the module to be compiled
     required: false
     type: string
+  requirements-path:
+    description: Requirements.txt path
+    required: false
+    type: string
+    default: ""
 
 runs:
   using: composite
@@ -20,7 +25,7 @@ runs:
 
   - name: Install module dependencies
     run: |
-      if [ -f "${{ inputs.module-name }}/requirements.txt" ]; then pip install -r ${{ inputs.module-name }}/requirements.txt; fi
+      if [ -f "${{ inputs.module-name }}/requirements.txt" ]; then pip install -r ${{ inputs.module-name }}/requirements.txt; else if [ -f "${{ inputs.requirements-path }}/requirements.txt" ]; then pip install -r ${{ inputs.requirements-path }}/requirements.txt; fi fi
     shell: bash
 
   - name: Lint with pylint
