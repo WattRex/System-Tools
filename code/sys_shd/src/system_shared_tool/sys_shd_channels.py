@@ -6,7 +6,7 @@ for each channel.
 """
 
 #######################        MANDATORY IMPORTS         #######################
-
+from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from queue import Queue, Empty, Full
 from pickle import dumps, loads, HIGHEST_PROTOCOL
