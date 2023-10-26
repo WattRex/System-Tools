@@ -141,7 +141,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         while self.current_messages > 0:
             self.receive(timeout = timeout)
 
-    def receive_data(self, timeout: int = DEFAULT_TIMEOUT) -> object:
+    def receive_data(self, timeout: int|None = None) -> object:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
@@ -150,7 +150,6 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
             object: The first element of the queue.
         '''
         msg_decoded = None
-        # if not self.is_empty():
         self.block = True
         try:
             message, _ = self.receive(timeout = timeout)
@@ -170,16 +169,17 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
             object: Return the first element from the queue if it is not empty.
             Return None otherwise.
         '''
-
-        self.block = False
-        try:
-            message, _ = self.receive(timeout = timeout)
-            log.debug(f"Send data: {len(message)} - {type(message)} - {message}")
-            msg_decoded = loads(message, encoding='utf-8')
-        except Exception as err:
-            log.error(f"Impossible to receive message with error {err}")
-            raise err
-        self.block = True
+        msg_decoded = None
+        if not self.is_empty():
+            self.block = False
+            try:
+                message, _ = self.receive(timeout = timeout)
+                log.debug(f"Send data: {len(message)} - {type(message)} - {message}")
+                msg_decoded = loads(message, encoding='utf-8')
+            except Exception as err:
+                log.error(f"Impossible to receive message with error {err}")
+                raise err
+            self.block = True
         return msg_decoded
 
 
