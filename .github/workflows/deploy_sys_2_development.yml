@@ -22,17 +22,20 @@ jobs:
     name: Build package ${{ github.ref_name }}
     uses: ./.github/workflows/build_python_package.yml
     with:
-      module-name: ${{ github.ref_name }}
+      package-name: ${{ github.ref_name }}
+      package-path: "code/${{ github.ref_name }}"
+      python-version: "3.10"
   
   build-package-on-pull-request:
     if: ${{ github.event_name == 'pull_request_review' }}
     name: Build package  ${{ github.event.pull_request.head.ref }}
     uses: ./.github/workflows/build_python_package.yml
     with:
-      module-name: ${{ github.event.pull_request.head.ref }}
+      package-name: ${{ github.ref_name }}
+      package-path: "code/${{ github.ref_name }}"
+      python-version: "3.10"
     
   publish-package:
-    
     name: Publish package ${{ github.event.pull_request.head.ref }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
     needs: build-package-on-pull-request
@@ -40,19 +43,12 @@ jobs:
     environment: development
     permissions:
       id-token: write
-      # strategy:
-        #   fail-fast: false
-        #   matrix:
-          #     # python-version: ["3.7", "3.9", "3.11"]
-          #     python-version: ["3.11"]
-
     steps:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
           name:  ${{ github.event.pull_request.head.ref }}
           path: ${{ github.event.pull_request.head.ref }}/dist/
-
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
         with:
