@@ -164,7 +164,6 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
     def receive_data_unblocking(self) -> object:
         '''
         Receive data from the queue in unblocking mode.
-
         Returns:
             object: Return the first element from the queue if it is not empty.
             Return None otherwise.
