@@ -161,7 +161,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         self.block = False
         return msg_decoded
 
-    def receive_data_unblocking(self, timeout: int = DEFAULT_TIMEOUT) -> object:
+    def receive_data_unblocking(self) -> object:
         '''
         Receive data from the queue in unblocking mode.
 
@@ -173,7 +173,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         if not self.is_empty():
             self.block = False
             try:
-                message, _ = self.receive(timeout = timeout)
+                message, _ = self.receive()
                 log.debug(f"Send data: {len(message)} - {type(message)} - {message}")
                 msg_decoded = loads(message, encoding='utf-8')
             except Exception as err:
