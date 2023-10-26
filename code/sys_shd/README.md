@@ -14,8 +14,13 @@ posix library. It also can be checked by means of `ulimit -q` command. Default v
 The maximum length of a message sent through POSIX queue is define in the file:
 `cat /proc/sys/fs/mqueue/msgsize_max`
 
+Can be change using the command:
+`sudo sh -c 'echo 200 > /proc/sys/fs/mqueue/msgsize_max'`
+
 The maximum number of a messages allocated in a POSIX queue is define in the file:
 `cat /proc/sys/fs/mqueue/msg_max`
+Can be change using the command:
+`sudo sh -c 'echo 200 > /proc/sys/fs/mqueue/msg_max'`
 
 The parameters `max_msg` and `max_message_size` given to `SysShdIpcChanC` must be
 lower that ones specified on Linux files.

@@ -89,8 +89,8 @@ class SysShdNodeC(Thread):
 
     def run(self) -> None:
         '''
-        Main method executed by the CAN thread. It receive data from EPCs and PLAKs
-        and store it on the corresponding chan.
+        Main method executed by the Node thread, it is used as a base class to create a node, that
+        execute the process iteration method in a loop.
         '''
         log.info("Start running process")
         self.status = SysShdNodeStatusE.INIT
