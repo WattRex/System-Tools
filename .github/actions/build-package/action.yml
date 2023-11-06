@@ -45,7 +45,7 @@ runs:
   - name: Check new version
     id: get-version
     run: |
-      python3 ${{ github.action_path }}/get_version.py ${{ inputs.source-path }}
+      python3 ${{ github.action_path }}/get_version.py ${{ inputs.package-path }}
     shell: bash
 
   - name: Build a binary wheel and a source tarball
