@@ -16,8 +16,8 @@ def merge_version():
     if len(sys.argv) == 2:
         project_path = sys.argv[1]
     elif len(sys.argv) == 3 and sys.argv[2] == 'test':
-            print("check version for test pypi")
-            use_test_pypi = True
+        print("check version for test pypi")
+        use_test_pypi = True
         project_path = sys.argv[1]
     else:
         print("bash usage: python3 get_version.py <path to toml project file> [test]")
