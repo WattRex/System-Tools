@@ -13,14 +13,15 @@ def merge_version():
     """Compares the version of the project into the local version .
     """
     use_test_pypi = False
-    if len(sys.argv) != 2 or len(sys.argv) != 3:
-        print("bash usage: python3 get_version.py <path to toml project file> ")
-        sys.exit(1)
-    else:
-        if len(sys.argv) == 3 and sys.argv[2] == 'test':
+    if len(sys.argv) == 2:
+        project_path = sys.argv[1]
+    elif len(sys.argv) == 3 and sys.argv[2] == 'test':
             print("check version for test pypi")
             use_test_pypi = True
         project_path = sys.argv[1]
+    else:
+        print("bash usage: python3 get_version.py <path to toml project file> [test]")
+        sys.exit(1)
 
     vparse = lambda x: tuple(map(int, x.split('.'))) # pylint: disable= unnecessary-lambda-assignment
     toml_proj_path = f'{project_path}/pyproject.toml'
