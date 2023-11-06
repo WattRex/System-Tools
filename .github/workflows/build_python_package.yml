@@ -30,7 +30,7 @@ on:
       is-test-package:
         description: True if is a test package for testPypi
         required: false
-        type: bool
+        type: boolean
         default: false
 
 jobs:
