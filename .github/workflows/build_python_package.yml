@@ -27,6 +27,12 @@ on:
         type: string
         default: "3.7"
 
+      is-test-package:
+        description: True if is a test package for testPypi
+        required: false
+        type: bool
+        default: false
+
 jobs:
 
   call-setup-python:
@@ -52,6 +58,7 @@ jobs:
         with:
           source-path: ${{ inputs.source-path }}
           package-path: ${{ inputs.package-path }}
+          is-test-package: ${{ inputs.is-test-package }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3

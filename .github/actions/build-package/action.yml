@@ -20,6 +20,12 @@ inputs:
     required: true
     type: string
 
+  is-test-package:
+    description: True if is a test package for testPypi
+    required: false
+    type: bool
+    default: false
+
 runs:
   using: composite
   steps:
@@ -45,7 +51,10 @@ runs:
   - name: Check new version
     id: get-version
     run: |
-      python3 ${{ github.action_path }}/get_version.py ${{ inputs.package-path }}
+      if ${{ inputs.is-test-package }}; then
+        is_test='test'
+      fi
+      python3 ${{ github.action_path }}/get_version.py ${{ inputs.package-path }} $is_test
     shell: bash
 
   - name: Build a binary wheel and a source tarball
