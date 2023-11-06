@@ -11,11 +11,11 @@ branding:
 inputs:
 
   source-path:
-    description: Path to the pacakge source files
+    description: Path to the package source files
     required: true
     type: string
 
-  pacakge-path:
+  package-path:
     description: Path to the package definition files
     required: true
     type: string
@@ -26,7 +26,7 @@ runs:
 
   - name: Install module dependencies
     run: |
-      if [ -f "${{ pacakge-path }}/requirements.txt" ]; then pip install -r ${{ pacakge-path }}/requirements.txt; fi
+      if [ -f "${{ package-path }}/requirements.txt" ]; then pip install -r ${{ package-path }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
