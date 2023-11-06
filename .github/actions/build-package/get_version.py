@@ -12,9 +12,14 @@ import toml
 def merge_version():
     """Compares the version of the project into the local version .
     """
+    use_test_pypi = False
     if len(sys.argv) != 2:
-        print("bash usage: python3 get_version.py <path to toml project file> ")
-        sys.exit(1)
+        if len(sys.argv) == 3 and sys.argv[2] == 'test':
+            print("check version for test pypi")
+            use_test_pypi = True
+        else:
+            print("bash usage: python3 get_version.py <path to toml project file> ")
+            sys.exit(1)
     else:
         project_path = sys.argv[1]
 
@@ -32,8 +37,12 @@ def merge_version():
 
     print(f"Local version: {checkout_version}")
     checkout_version = re.findall(r'\d\.\d\.\d', str(checkout_version))[0]
-    pypi_check = subprocess.run(f'python3 -m pip index versions {name}',
-                                shell=True, capture_output=True, check= False)
+    if use_test_pypi:
+        cmd = f"python3 -m pip index versions -i https://test.pypi.org/project/ {name}"
+    else:
+        cmd = f"python3 -m pip index versions {name}"
+    pypi_check = subprocess.run(cmd,
+                            shell=True, capture_output=True, check= False)
     new_local_version = False
     if pypi_check.returncode > 0:
         new_local_version = True
@@ -49,7 +58,7 @@ def merge_version():
         new_version = pypi_version
         patch = int(new_version[-1]) + 1
         new_version = f'{new_version[:-1]}{patch}'
-    
+
     print(f"New version package is: {new_version}")
     subprocess.run(f'echo new-version={new_version} >> $GITHUB_OUTPUT', shell=True, check=False)
 
