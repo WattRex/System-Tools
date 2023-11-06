@@ -50,7 +50,7 @@ runs:
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.source-path }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.package-path }}
     shell: bash
     env:
       SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
