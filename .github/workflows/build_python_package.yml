@@ -10,21 +10,23 @@ on:
         description: Name of the python package
         required: true
         type: string
+
       package-path:
-        description: Path of the package to be compiled
+        description: Path to the package definition files
         required: true
         type: string
-      requirements-path:
-        description: Path of the requirements.txt file
-        required: false
+
+      source-path:
+        description: Path to the pacakge source files
+        required: true
         type: string
-        default: ""
+
       python-version:
         description: Python version to use in python environment setup for QA test and build package.
         required: false
         type: string
         default: "3.7"
-        
+
 jobs:
 
   call-setup-python:
@@ -48,8 +50,8 @@ jobs:
       - name: Perform QA test and build package
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
-          module-name: ${{ inputs.package-path }}
-          requirements-path: ${{ inputs.requirements-path }}
+          source-path: ${{ inputs.source-path }}
+          pacakge-path: ${{ inputs.package-path }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3

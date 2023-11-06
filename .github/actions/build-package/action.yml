@@ -9,15 +9,16 @@ branding:
   color: blue
 
 inputs:
-  module-name:
-    description: Name of the module to be compiled
-    required: false
+
+  source-path:
+    description: Path to the pacakge source files
+    required: true
     type: string
-  requirements-path:
-    description: Requirements.txt path
-    required: false
+
+  pacakge-path:
+    description: Path to the package definition files
+    required: true
     type: string
-    default: ""
 
 runs:
   using: composite
@@ -25,31 +26,31 @@ runs:
 
   - name: Install module dependencies
     run: |
-      if [ -f "${{ inputs.module-name }}/requirements.txt" ]; then pip install -r ${{ inputs.module-name }}/requirements.txt; else if [ -f "${{ inputs.requirements-path }}/requirements.txt" ]; then pip install -r ${{ inputs.requirements-path }}/requirements.txt; fi fi
+      if [ -f "${{ pacakge-path }}/requirements.txt" ]; then pip install -r ${{ pacakge-path }}/requirements.txt; fi
     shell: bash
 
   - name: Lint with pylint
     run: |
-      pylint --rcfile=.vscode/.pylintrc ${{ inputs.module-name }}/*
+      pylint --rcfile=.vscode/.pylintrc ${{ inputs.source-path }}/*
     shell: bash
 
   - name: Run tests
     run: |
-      test_path='${{ inputs.module-name }}/tests/test*.py'
+      test_path='${{ inputs.source-path }}/tests/test*.py'
       if ls $test_path > /dev/null 2>&1; then
         pytest $test_path
       fi
     shell: bash
-   
+
   - name: Check new version
     id: get-version
     run: |
-      python3 ${{ github.action_path }}/get_version.py ${{ inputs.module-name }}
+      python3 ${{ github.action_path }}/get_version.py ${{ inputs.source-path }}
     shell: bash
 
   - name: Build a binary wheel and a source tarball
     run: |
-      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.module-name }}
+      python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.source-path }}
     shell: bash
     env:
       SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get-version.outputs.new-version }}
