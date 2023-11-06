@@ -17,7 +17,7 @@ on:
         type: string
 
       source-path:
-        description: Path to the pacakge source files
+        description: Path to the package source files
         required: true
         type: string
 
@@ -51,7 +51,7 @@ jobs:
         uses: WattRex/System-Tools/.github/actions/build-package@develop
         with:
           source-path: ${{ inputs.source-path }}
-          pacakge-path: ${{ inputs.package-path }}
+          package-path: ${{ inputs.package-path }}
 
       - name: Upload package
         uses: actions/upload-artifact@v3
