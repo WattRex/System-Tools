@@ -29,34 +29,49 @@ from sys_shd.src.system_shared_tool import SysShdSharedObjC, SysShdNodeC
 
 #######################              ENUMS               #######################
 #######################             CLASSES              #######################
-class DummyHolaC:
-    """A dummy class .
-    """
-    def __init__(self):
-        self.adios: str = "adios"
-        self.mundo: str = "mundo"
+# class DummyHolaC:
+#     """A dummy class .
+#     """
+#     def __init__(self):
+#         self.adios: int = 0
+#         # self.mundo: int = 100
 
-class DummyTardesC:
-    """A dummy class .
-    """
-    def __init__(self):
-        self.marius: str = "marius"
-        self.javi: str = "javi"
-        self.roberto: str = "roberto"
+# class DummyTardesC:
+#     """A dummy class .
+#     """
+#     def __init__(self):
+#         self.marius: int = 200
+#         self.javi: int = 300
+#         self.roberto: int = 400
 
-class DummyBuenosC:
-    """A dummy class .
-    """
-    def __init__(self):
-        self.dias: str = "dias"
-        self.tardes: DummyTardesC = DummyTardesC()
+# class DummyBuenosC:
+#     """A dummy class .
+#     """
+#     def __init__(self):
+#         self.dias: int = 500
+#         self.tardes: DummyTardesC = DummyTardesC()
 
-class DummyMariusC:
-    """A dummy class .
-    """
-    def __init__(self):
-        self.hola: DummyHolaC = DummyHolaC()
-        self.buenos: DummyBuenosC = DummyBuenosC()
+# class DummyMariusC:
+#     """A dummy class .
+#     """
+#     def __init__(self):
+#         self.hola: DummyHolaC = DummyHolaC()
+#         self.buenos: DummyBuenosC = DummyBuenosC()
+
+# class MariusNode(SysShdNodeC):
+#     """ Dummy node that contains a shared object and a thread that modifies it."""
+#     def __init__(self, shd_obj: SysShdSharedObjC, working_flag: Event, period: int, case: int):
+#         self.__case = case
+#         self.__local_obj: DummyMariusC
+#         self.shd_obj = shd_obj
+#         log.info(msg=f"Creating MariusNode_{self.__case}")
+#         super().__init__(name= f"MariusNode_{self.__case}", cycle_period= period,
+#                             working_flag= working_flag)
+    
+#     def sync_shd_data(self) -> None:
+#         if self.__case == 0:
+#             self.__local_obj = self.shd_obj.merge_included_tags(new_obj= self.__local_obj,
+#                                             included_tags= ['hola'])
 
 class DummyObject:
     """A dummy class .
@@ -100,12 +115,12 @@ class DummyNode(SysShdNodeC):
             """
             if self.__thread_1:
                 ## Node 1
-                self.__local_obj = self.shd_obj.merge_included_tags(new_obj= self.__local_obj,
+                self.__local_obj = self.shd_obj.update_including_tags(new_obj= self.__local_obj,
                                                 included_tags= ['value_a', 'value_c'])
             else:
                 ## Node 0
-                self.__local_obj = self.shd_obj.merge_exclude_tags(new_obj= self.__local_obj,
-                                                included_tags= ['value_a'])
+                self.__local_obj = self.shd_obj.update_excluding_tags(new_obj= self.__local_obj,
+                                                excluded_tags= ['value_a'])
             log.info(msg=f"DummyNode_{int(self.__thread_1)}: {self.__local_obj.__dict__}")
 
     def process_iteration(self) -> None:
@@ -157,6 +172,18 @@ class TestChannels:
         Yields:
             [type]: [description]
         """
+        log.info(msg= f"Test case: {request.param[0]}")
+        #######################            SETUP              #######################
+        # test_obj = SysShdSharedObjC(DummyMariusC())
+        # # Create nodes
+        # self.working_flag = Event()
+        # self.working_flag.set()
+        # node = MariusNode(shd_obj= test_obj, working_flag= self.working_flag, period= 100,
+        #                     case= request.param[1])
+        
+        # #######################            TEST INCLUDE                #######################
+        # #######################            TEST EXCLUDE                #######################
+        # #######################            TEST NUMBERS                #######################
         # Shared object between threads
         test_obj = SysShdSharedObjC(DummyObject(0, 0))
         # Create nodes
@@ -165,9 +192,9 @@ class TestChannels:
         self.working_flag_0.set()
         self.working_flag_1.set()
         node_1 = DummyNode(shd_obj= test_obj, thread_1= False,
-                           working_flag= self.working_flag_0, period= 100)
+                           working_flag= self.working_flag_0, period= 50)
         node_2 = DummyNode(shd_obj= test_obj, thread_1= True,
-                           working_flag= self.working_flag_1, period= 100)
+                           working_flag= self.working_flag_1, period= 50)
         sleep(1)
 
         # Initialize threads/process
@@ -177,8 +204,8 @@ class TestChannels:
         i = 0
         check_objt: DummyObject = test_obj.read()
         log.info(f"Values of shared object: {check_objt.__dict__}")
-        while (check_objt.value_a < 1000 and check_objt.value_b > 0 and
-               check_objt.value_c < 1000 and check_objt.value_d > 0):
+        while (check_objt.value_a < 750 and check_objt.value_b > 750 and
+               check_objt.value_c < 250 and check_objt.value_d > -250):
             if i > 500:
                 raise AssertionError("The threads are not sharing as expected")
             # log.info(f"Values of shared object: {check_objt.__dict__}")
@@ -189,6 +216,7 @@ class TestChannels:
         self.working_flag_1.clear()
         self.working_flag_0.clear()
         sleep(1)
+        log.info(f"Values of shared object at end: {check_objt.__dict__}")
 
     @fixture(scope="function")
     def config(self) -> None:
@@ -198,7 +226,8 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [['Shared object test']], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [['Testing shd in nodes']],
+                indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
