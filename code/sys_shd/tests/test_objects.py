@@ -29,6 +29,35 @@ from sys_shd.src.system_shared_tool import SysShdSharedObjC, SysShdNodeC
 
 #######################              ENUMS               #######################
 #######################             CLASSES              #######################
+class DummyHolaC:
+    """A dummy class .
+    """
+    def __init__(self):
+        self.adios: str = "adios"
+        self.mundo: str = "mundo"
+
+class DummyTardesC:
+    """A dummy class .
+    """
+    def __init__(self):
+        self.marius: str = "marius"
+        self.javi: str = "javi"
+        self.roberto: str = "roberto"
+
+class DummyBuenosC:
+    """A dummy class .
+    """
+    def __init__(self):
+        self.dias: str = "dias"
+        self.tardes: DummyTardesC = DummyTardesC()
+
+class DummyMariusC:
+    """A dummy class .
+    """
+    def __init__(self):
+        self.hola: DummyHolaC = DummyHolaC()
+        self.buenos: DummyBuenosC = DummyBuenosC()
+
 class DummyObject:
     """A dummy class .
     """
