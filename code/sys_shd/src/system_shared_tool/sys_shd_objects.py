@@ -96,7 +96,7 @@ class SysShdSharedObjC:
 
         return temp_obj
 
-    def merge_exclude_tags(self, new_obj : object, included_tags : List[str]) -> object:
+    def merge_exclude_tags(self, new_obj : object, excluded_tags : List[str]) -> object:
         '''
         Merge shared object with the new object excluding the attributes specified in excluded_tags.
         Copies from new_obj to the shared object all the attributes,
@@ -121,7 +121,7 @@ class SysShdSharedObjC:
         temp_obj = self.read()
 
         # Write excluded original tags to new object
-        for tag in included_tags:
+        for tag in excluded_tags:
             attribs = tag.split(".")
             _merge_class(new_obj, temp_obj, attribs)
 
@@ -144,22 +144,30 @@ def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> Non
     Raises:
         SysShdChanErrorC: Throw an exception if the attribute doesn't exists.
     '''
-    if hasattr(dst_obj, attribs[0]) and hasattr(src_obj, attribs[0]):
-        old_inst = getattr(dst_obj, attribs[0])
-        if isinstance(old_inst, dict):
-            new_dict = getattr(src_obj, attribs[0])
-            for key, value in old_inst.items():
-                if len(attribs) > 1:
-                    _merge_class(value, new_dict[key], attribs[1:])
-                else:
-                    old_inst[key] = new_dict[key]
-            setattr(dst_obj, attribs[0], old_inst)
-        else:
-            if len(attribs) > 1:
-                _merge_class(getattr(dst_obj, attribs[0]), \
-                                    getattr(src_obj, attribs[0]), attribs[1:])
+    # if hasattr(dst_obj, attribs[0]) and hasattr(src_obj, attribs[0]):
+    if hasattr(src_obj, attribs[0]):
+        if hasattr(dst_obj, attribs[0]):
+        ## Attribute exists on both instances, perform merge
+            old_inst = getattr(dst_obj, attribs[0])
+            if isinstance(old_inst, dict):
+                new_dict = getattr(src_obj, attribs[0])
+                for key, value in old_inst.items():
+                    if len(attribs) > 1:
+                        _merge_class(value, new_dict[key], attribs[1:])
+                    else:
+                        old_inst[key] = new_dict[key]
+                setattr(dst_obj, attribs[0], old_inst)
             else:
-                setattr(dst_obj, attribs[0], getattr(src_obj, attribs[0]))
+                if len(attribs) > 1:
+                    _merge_class(getattr(dst_obj, attribs[0]), \
+                                        getattr(src_obj, attribs[0]), attribs[1:])
+                else:
+                    setattr(dst_obj, attribs[0], getattr(src_obj, attribs[0]))
+        else:
+            ## Attribute exists only on dst, not in source: copy it to dst
+            new_inst = getattr(src_obj, attribs[0])
+            setattr(dst_obj, attribs[0], new_inst)
+
     else:
         log.error(f"New object doesn't have attribute: {attribs[0]}")
         raise SysShdErrorC(message=f"New object doesn't have attribute: {attribs[0]}")
