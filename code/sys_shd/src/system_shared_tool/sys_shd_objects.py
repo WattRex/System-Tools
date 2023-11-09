@@ -23,7 +23,6 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################          MODULE IMPORTS          #######################
-from .sys_shd_common import SysShdErrorC
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################

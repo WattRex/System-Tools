@@ -6,8 +6,6 @@ This file test sys shd channels.
 #######################        MANDATORY IMPORTS         #######################
 import os
 import sys
-import random
-from copy import deepcopy
 #######################         GENERIC IMPORTS          #######################
 from threading import Event
 from signal import signal, SIGINT
@@ -29,49 +27,6 @@ from sys_shd.src.system_shared_tool import SysShdSharedObjC, SysShdNodeC
 
 #######################              ENUMS               #######################
 #######################             CLASSES              #######################
-# class DummyHolaC:
-#     """A dummy class .
-#     """
-#     def __init__(self):
-#         self.adios: int = 0
-#         # self.mundo: int = 100
-
-# class DummyTardesC:
-#     """A dummy class .
-#     """
-#     def __init__(self):
-#         self.marius: int = 200
-#         self.javi: int = 300
-#         self.roberto: int = 400
-
-# class DummyBuenosC:
-#     """A dummy class .
-#     """
-#     def __init__(self):
-#         self.dias: int = 500
-#         self.tardes: DummyTardesC = DummyTardesC()
-
-# class DummyMariusC:
-#     """A dummy class .
-#     """
-#     def __init__(self):
-#         self.hola: DummyHolaC = DummyHolaC()
-#         self.buenos: DummyBuenosC = DummyBuenosC()
-
-# class MariusNode(SysShdNodeC):
-#     """ Dummy node that contains a shared object and a thread that modifies it."""
-#     def __init__(self, shd_obj: SysShdSharedObjC, working_flag: Event, period: int, case: int):
-#         self.__case = case
-#         self.__local_obj: DummyMariusC
-#         self.shd_obj = shd_obj
-#         log.info(msg=f"Creating MariusNode_{self.__case}")
-#         super().__init__(name= f"MariusNode_{self.__case}", cycle_period= period,
-#                             working_flag= working_flag)
-    
-#     def sync_shd_data(self) -> None:
-#         if self.__case == 0:
-#             self.__local_obj = self.shd_obj.merge_included_tags(new_obj= self.__local_obj,
-#                                             included_tags= ['hola'])
 
 class DummyObject:
     """A dummy class .
@@ -101,43 +56,43 @@ class DummyNode(SysShdNodeC):
             self.__local_obj.value_d = 500
 
     def sync_shd_data(self) -> None:
-            """
-            Synchronize the local object with the shared object 
-            by either merging included tags or excluding tags.
+        """
+        Synchronize the local object with the shared object 
+        by either merging included tags or excluding tags.
 
-            If the thread is running, merge the included tags 'value_a' and 'value_c' 
-            from the shared object into the local object.
-            Otherwise, merge the excluded tag 'value_a' from
-            the shared object into the local object.
+        If the thread is running, merge the included tags 'value_a' and 'value_c' 
+        from the shared object into the local object.
+        Otherwise, merge the excluded tag 'value_a' from
+        the shared object into the local object.
 
-            Returns:
-                None
-            """
-            if self.__thread_1:
-                ## Node 1
-                self.__local_obj = self.shd_obj.update_including_tags(new_obj= self.__local_obj,
-                                                included_tags= ['value_a', 'value_c'])
-            else:
-                ## Node 0
-                self.__local_obj = self.shd_obj.update_excluding_tags(new_obj= self.__local_obj,
-                                                excluded_tags= ['value_a'])
-            log.info(msg=f"DummyNode_{int(self.__thread_1)}: {self.__local_obj.__dict__}")
+        Returns:
+            None
+        """
+        if self.__thread_1:
+            ## Node 1
+            self.__local_obj = self.shd_obj.update_including_tags(new_obj= self.__local_obj,
+                                            included_tags= ['value_a', 'value_c'])
+        else:
+            ## Node 0
+            self.__local_obj = self.shd_obj.update_excluding_tags(new_obj= self.__local_obj,
+                                            excluded_tags= ['value_a'])
+        log.info(msg=f"DummyNode_{int(self.__thread_1)}: {self.__local_obj.__dict__}")
 
     def process_iteration(self) -> None:
-            """
-            Actualiza los datos de shd y modifica los valores
-            de los objetos locales según el hilo activo.
-            """
-            self.sync_shd_data()
-            if self.__thread_1:
-                ## Node 1
-                self.__local_obj.value_a += 1
-                self.__local_obj.value_c += 1
-            else:
-                ## Node 0
-                self.__local_obj.value_b -= 1
-                self.__local_obj.value_d -= 1
-    
+        """
+        Actualiza los datos de shd y modifica los valores
+        de los objetos locales según el hilo activo.
+        """
+        self.sync_shd_data()
+        if self.__thread_1:
+            ## Node 1
+            self.__local_obj.value_a += 1
+            self.__local_obj.value_c += 1
+        else:
+            ## Node 0
+            self.__local_obj.value_b -= 1
+            self.__local_obj.value_d -= 1
+
     def stop(self) -> None:
         """Stop the node.
         """
@@ -160,7 +115,7 @@ class TestChannels:
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
         self.working_flag_0.clear()
         self.working_flag_1.clear()
-        exit(0)
+        sys.exit(0)
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):
@@ -173,22 +128,12 @@ class TestChannels:
             [type]: [description]
         """
         log.info(msg= f"Test case: {request.param[0]}")
-        #######################            SETUP              #######################
-        # test_obj = SysShdSharedObjC(DummyMariusC())
-        # # Create nodes
-        # self.working_flag = Event()
-        # self.working_flag.set()
-        # node = MariusNode(shd_obj= test_obj, working_flag= self.working_flag, period= 100,
-        #                     case= request.param[1])
-        
-        # #######################            TEST INCLUDE                #######################
-        # #######################            TEST EXCLUDE                #######################
         # #######################            TEST NUMBERS                #######################
         # Shared object between threads
         test_obj = SysShdSharedObjC(DummyObject(0, 0))
         # Create nodes
-        self.working_flag_0 = Event()
-        self.working_flag_1 = Event()
+        self.working_flag_0 = Event() #pylint: disable= attribute-defined-outside-init
+        self.working_flag_1 = Event() #pylint: disable= attribute-defined-outside-init
         self.working_flag_0.set()
         self.working_flag_1.set()
         node_1 = DummyNode(shd_obj= test_obj, thread_1= False,
@@ -204,8 +149,8 @@ class TestChannels:
         i = 0
         check_objt: DummyObject = test_obj.read()
         log.info(f"Values of shared object: {check_objt.__dict__}")
-        while (check_objt.value_a < 750 and check_objt.value_b > 750 and
-               check_objt.value_c < 250 and check_objt.value_d > -250):
+        while (check_objt.value_a < check_objt.value_d and check_objt.value_b > 750 and
+               check_objt.value_c > -250):
             if i > 500:
                 raise AssertionError("The threads are not sharing as expected")
             # log.info(f"Values of shared object: {check_objt.__dict__}")

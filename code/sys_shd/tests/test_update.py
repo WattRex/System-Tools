@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#pylint: disable= duplicate-code
 """
 This file test sys shd channels.
 """
@@ -6,12 +7,8 @@ This file test sys shd channels.
 #######################        MANDATORY IMPORTS         #######################
 import os
 import sys
-import random
-from copy import deepcopy
 #######################         GENERIC IMPORTS          #######################
-from threading import Event
 from signal import signal, SIGINT
-from time import sleep
 from pytest import fixture, mark
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
@@ -24,10 +21,11 @@ log: Logger = sys_log_logger_get_module_logger(name="test_shd_chanel")
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/')
-from sys_shd.src.system_shared_tool import SysShdSharedObjC, SysShdNodeC
+from sys_shd.src.system_shared_tool import SysShdSharedObjC
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
+
 #######################             CLASSES              #######################
 
 class DummyObject:
@@ -54,10 +52,10 @@ class TestChannels:
             frame ([type]): [description]
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
-        exit(0)
+        sys.exit(0)
 
     @fixture(scope="function", autouse=False)
-    def set_environ(self, request):
+    def set_environ(self, request): #pylint: disable= too-many-statements
         """Setup the environment variables and start the process .
 
         Args:
@@ -81,7 +79,7 @@ class TestChannels:
             raise AssertionError("The included tags are not working as expected in Included case 0")
         log.info(msg= f"Test case: {cases[1]}, an attribute not included doesn't exist in src_obj")
         dst_obj = DummyObject(0, 0)
-        dst_obj.value_c= 5
+        dst_obj.value_c= 5 #pylint: disable= attribute-defined-outside-init
         test_obj = SysShdSharedObjC(dst_obj)
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 20
@@ -95,13 +93,13 @@ class TestChannels:
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 30
         src_obj.value_b = 40
-        src_obj.value_c = 50
+        src_obj.value_c = 50 #pylint: disable= attribute-defined-outside-init
         src_obj = test_obj.update_including_tags(new_obj= src_obj, included_tags= ['value_a'])
         if src_obj.value_a != 30 and src_obj.value_b != 0 and hasattr(src_obj, 'value_c'):
             raise AssertionError("The included tags are not working as expected in Included case 2")
         log.info(msg= f"Test case: {cases[3]}, an attribute included doesn't exist in src_obj")
         dst_obj = DummyObject(0, 0)
-        dst_obj.value_c= 5
+        dst_obj.value_c= 5 #pylint: disable= attribute-defined-outside-init
         test_obj = SysShdSharedObjC(dst_obj)
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 40
@@ -116,7 +114,7 @@ class TestChannels:
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 50
         src_obj.value_b = 60
-        src_obj.value_c = 70
+        src_obj.value_c = 70 #pylint: disable= attribute-defined-outside-init
         src_obj = test_obj.update_including_tags(new_obj= src_obj,
                                                 included_tags= ['value_a', 'value_c'])
         if src_obj.value_a != 50 and src_obj.value_b != 0 and not hasattr(src_obj, 'value_c'):
@@ -132,7 +130,7 @@ class TestChannels:
             raise AssertionError("The excluded tags are not working as expected in Excluded case 0")
         log.info(msg= f"Test case: {cases[1]}, an attribute not excluded doesn't exist in src_obj")
         dst_obj = DummyObject(0, 0)
-        dst_obj.value_c= 5
+        dst_obj.value_c= 5 #pylint: disable= attribute-defined-outside-init
         test_obj = SysShdSharedObjC(dst_obj)
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 20
@@ -146,13 +144,13 @@ class TestChannels:
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 30
         src_obj.value_b = 40
-        src_obj.value_c = 50
+        src_obj.value_c = 50 #pylint: disable= attribute-defined-outside-init
         src_obj = test_obj.update_excluding_tags(new_obj= src_obj, excluded_tags= ['value_a'])
         if src_obj.value_a != 0 and src_obj.value_b != 40 and not hasattr(src_obj, 'value_c'):
             raise AssertionError("The excluded tags are not working as expected in Excluded case 2")
         log.info(msg= f"Test case: {cases[3]}, an attribute excluded doesn't exist in src_obj")
         dst_obj = DummyObject(0, 0)
-        dst_obj.value_c= 5
+        dst_obj.value_c= 5 #pylint: disable= attribute-defined-outside-init
         test_obj = SysShdSharedObjC(dst_obj)
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 40
@@ -167,7 +165,7 @@ class TestChannels:
         src_obj = DummyObject(0, 0)
         src_obj.value_a = 50
         src_obj.value_b = 60
-        src_obj.value_c = 70
+        src_obj.value_c = 70 #pylint: disable= attribute-defined-outside-init
         src_obj = test_obj.update_excluding_tags(new_obj= src_obj,
                                                 excluded_tags= ['value_a', 'value_c'])
         if src_obj.value_a != 50 and src_obj.value_b != 0 and not hasattr(src_obj, 'value_c'):
