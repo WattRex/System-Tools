@@ -24,6 +24,7 @@ jobs:
     with:
       package-name: ${{ github.ref_name }}
       package-path: "code/${{ github.ref_name }}"
+      source-path: "code/${{ github.ref_name }}/src"
       python-version: "3.10"
 
   build-package-on-pull-request:
