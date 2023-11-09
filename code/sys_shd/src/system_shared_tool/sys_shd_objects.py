@@ -73,10 +73,13 @@ class SysShdSharedObjC:
                         different from the previous one assigned.")
         self.__mutex.release()
 
-    def merge_included_tags(self, new_obj : object, included_tags : List[str]) -> object:
+    def update_including_tags(self, new_obj : object, included_tags : List[str]) -> object:
         '''
-        Merge shared object with the new object using the attributes specified in included_tags.
+        Updating shared object with the new object using the attributes specified in included_tags.
         Copies from new_obj to the shared object the attributes whose names appear in included_tags.
+        CAUTION:
+            If an attribute included is not in the new object it will get the value of the shd obj.
+            If an attribute excluded is not in the shared object it will be loss.
         If the attribute is a dictionary, or it is a subclass contained in an dict,
         the merge is done recursively for each item in dict.
 
@@ -96,9 +99,14 @@ class SysShdSharedObjC:
 
         return temp_obj
 
-    def merge_exclude_tags(self, new_obj : object, excluded_tags : List[str]) -> object:
+    def update_excluding_tags(self, new_obj : object, excluded_tags : List[str]) -> object:
         '''
-        Merge shared object with the new object excluding the attributes specified in excluded_tags.
+        Updating the shared object excluding the specified tags in excluded_tags with the new object
+        When the shared object is updated, the excluded tags will have the value of the shared obj.
+        CAUTION:
+            If an attribute included is not in the new object it will be loss.
+            If an attribute excluded is not in the shared object it will be updated anyway with the
+            value of the new object.
         Copies from new_obj to the shared object all the attributes,
         except those names that appear in excluded_tags.
         If the attribute is a dictionary, or it is a subclass contained in an dict,
@@ -108,11 +116,6 @@ class SysShdSharedObjC:
             new_obj (object): Object that contains the attributes to be copied.
             excluded_tags (List[str]): Nested names of attributes to be excluded in merge.
                 Attributes preserved from shared object.
-            Merge the included_tags into the class .
-
-        Args:
-            new_obj (object): [description]
-            included_tags (List[str]): [description]
 
         Returns:
             object: Return a copy of the merged object
@@ -144,7 +147,6 @@ def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> Non
     Raises:
         SysShdChanErrorC: Throw an exception if the attribute doesn't exists.
     '''
-    # if hasattr(dst_obj, attribs[0]) and hasattr(src_obj, attribs[0]):
     if hasattr(src_obj, attribs[0]):
         if hasattr(dst_obj, attribs[0]):
         ## Attribute exists on both instances, perform merge
@@ -169,5 +171,4 @@ def _merge_class(dst_obj : object, src_obj : object, attribs : List[str]) -> Non
             setattr(dst_obj, attribs[0], new_inst)
 
     else:
-        log.error(f"New object doesn't have attribute: {attribs[0]}")
-        raise SysShdErrorC(message=f"New object doesn't have attribute: {attribs[0]}")
+        log.warning(f"New object doesn't have attribute: {attribs[0]}")
