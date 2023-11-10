@@ -35,7 +35,8 @@ class SysLogLoggerC():
     """
     def __init__(self, \
                  file_config_path:str = dir_path+'/logginConfig.conf', \
-                 file_log_levels: str = '...') -> None:
+                 file_log_levels: str = '...',
+                 output_sub_folder : str = None) -> None:
         #Example: file_config_path = './myLogginConfig.conf'
         '''
         Initialize the main logger.
@@ -49,13 +50,18 @@ class SysLogLoggerC():
         config_parser.read(filenames=file_config_path)
         if 'handler_rotatingFileHandler' in config_parser and 'args' \
             in config_parser['handler_rotatingFileHandler']:   # Check if the logConfigFile
-            log_folder = self.__parse_log_folder(config_parser)
-            Path(log_folder).mkdir(parents = True, exist_ok = True)
+            log_folder, log_file_name = self.__parse_log_folder(config_parser)
+            if output_sub_folder is not None:
+                log_folder += '/' + output_sub_folder
+                Path(log_folder).mkdir(parents = True, exist_ok = True)
+                log_file_path = log_folder+"/"+log_file_name
+                print(f"Log final filename: {log_file_path}")
+            else:
+                Path(log_folder).mkdir(parents = True, exist_ok = True)
 
         ## Logging fileconfig
         print("Fichero leido")
 
-        print(file_config_path)
         fileConfig(fname=file_config_path,disable_existing_loggers=True)
 
         prev_fmt = Logger.root.handlers[0].formatter
@@ -75,6 +81,11 @@ class SysLogLoggerC():
         #, encoding='utf-8'
         for han in getLogger().handlers:
             if isinstance(han, RotatingFileHandler):
+                if output_sub_folder is not None:
+                    prev_file = han.baseFilename
+                    if os.path.isfile(prev_file):
+                        os.remove(prev_file)
+                    han.baseFilename = log_file_path
                 han.doRollover()
         debug('First log message...')
 
@@ -88,10 +99,11 @@ class SysLogLoggerC():
         '''
         log_folder_list = config_parser['handler_rotatingFileHandler']\
             ['args'].split(",", 1)[0][2:-1].split("/")
+        # return log_folder_list
         log_folder = ""
         for aux in range(len(log_folder_list)-1):
             log_folder += log_folder_list[aux] + "/"
-        return log_folder[:-1]
+        return (log_folder[:-1], log_folder_list[-1])
 
 
 class SysLogCustomFormatterC(Formatter):
