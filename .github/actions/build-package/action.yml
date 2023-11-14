@@ -42,9 +42,11 @@ runs:
 
   - name: Run tests
     run: |
-      test_path='${{ inputs.source-path }}/tests/test*.py'
-      if ls $test_path > /dev/null 2>&1; then
-        pytest $test_path
+      if ${{ inputs.is-test-package }}; then
+        test_path='${{ inputs.source-path }}/tests/test*.py'
+        if ls $test_path > /dev/null 2>&1; then
+          pytest $test_path
+        fi
       fi
     shell: bash
 
