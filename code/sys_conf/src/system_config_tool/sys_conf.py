@@ -1,36 +1,38 @@
 #!/usr/bin/python3
-"""
-    This module works to have a configuration, mainly for the logger.
-"""
+'''
+This module works to have a configuration, mainly for the logger.
+'''
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-import sys
-import os
 
 #######################         GENERIC IMPORTS          #######################
+import sys
+from os import getcwd, getenv
 
 #######################       THIRD PARTY IMPORTS        #######################
 import yaml
 
-sys.path.append(os.getcwd())  #get absolute path
+sys.path.append(getcwd())  #get absolute path
 #######################      LOGGING CONFIGURATION       #######################
-#Not available in this file because it is imported in the logger file
-#######################          MODULE IMPORTS          #######################
+from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
+if __name__ == "__main__":
+    cycler_logger = SysLogLoggerC(file_log_levels='./log_config.yaml')
+log: Logger = sys_log_logger_get_module_logger(__name__)
 
+#######################          MODULE IMPORTS          #######################
 
 #######################          PROJECT IMPORTS         #######################
 
-
 #######################              ENUMS               #######################
-
 
 #######################             CLASSES              #######################
 class SysConfSectionNotFoundErrorC(Exception):
-    """Handle exception thrown in SysConf sectionNotFoundC .
+    '''
+    Handle exception thrown in SysConf sectionNotFoundC .
 
     Args:
         Exception ([type]): [description]
-    """
+    '''
     def __init__(self, message) -> None:
         '''
         Exception raised for errors when a section is not found in the file.
@@ -69,6 +71,30 @@ def sys_conf_read_config_params(filename:str = 'config.yaml',
             raise SysConfSectionNotFoundErrorC( \
                 f"Section {section} not found in the {filename} file")
     return data
+
+
+def sys_conf_update_config_params(context : dict,
+                                  constants_names : tuple,
+                                  section : str|None = None):
+    '''
+    Update the constants in the context dictionary with the values read from the
+    configuration file.
+
+    Args:
+        - context (dict): Dictionary with the context to be updated.
+        - constants_names (tuple): Tuple with the names of the constants to be
+        updated.
+        - section (str, optional): Section to be parsed from the configuration file.
+    '''
+    if section is None:
+        section = context['__package__'].split(".")[-1]
+    custom_params = sys_conf_read_config_params(filename = getenv('CONFIG_FILE_PATH', ''),
+                                                section=section)
+    for const_name in constants_names:
+        if const_name in custom_params:
+            context[const_name] = custom_params[const_name]
+            log.debug(f"Constant {const_name} updated to: {custom_params[const_name]}")
+
 
 def sys_conf_get_argv_password() -> str:
     '''
