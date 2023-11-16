@@ -202,14 +202,14 @@ def sys_log_logger_get_module_logger(name : str,
             else:
                 # For test file. Ex: Test_APP_DIAG
                 name = name_list[0]
-        custom_level = sys_log_read_config_params(
+        custom_level = __read_config_params(
             filename = config_by_module_filename, section = name)
         log.setLevel(str(custom_level))
         log.debug(msg=f"log level of {name} has been set to {custom_level}")
 
         # Assign the file handler to the logger
         # if the module name is found in the file_handlers section
-        file_handlers = sys_log_read_config_params(
+        file_handlers = __read_config_params(
             filename = config_by_module_filename, section = 'file_handlers')
         for key in file_handlers:
             for module_name in file_handlers[key]:
@@ -238,7 +238,7 @@ def sys_log_logger_get_module_logger(name : str,
     return log
 
 
-def sys_log_read_config_params(filename:str = 'config.yaml',
+def __read_config_params(filename:str = 'config.yaml',
                             section: str|None = None) -> dict:
     '''
     Reads config parameters from a config file.
