@@ -6,13 +6,12 @@ This module works to have a configuration, mainly for the logger.
 from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
-import sys
-from os import getcwd, getenv
+from sys import argv
+from os import getenv
 
 #######################       THIRD PARTY IMPORTS        #######################
 import yaml
 
-sys.path.append(getcwd())  #get absolute path
 #######################      LOGGING CONFIGURATION       #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 if __name__ == "__main__":
@@ -109,11 +108,11 @@ def sys_conf_get_argv_password() -> str:
         command or "" (empty str) if no argument was given.
     '''
     password = ''
-    if len(sys.argv) > 1:
-        if '-p' in sys.argv:
-            list_index = sys.argv.index('-p')
-            password = sys.argv[list_index + 1]
-        elif '--password' in sys.argv:
-            list_index = sys.argv.index('--password')
-            password = sys.argv[list_index + 1]
+    if len(argv) > 1:
+        if '-p' in argv:
+            list_index = argv.index('-p')
+            password = argv[list_index + 1]
+        elif '--password' in argv:
+            list_index = argv.index('--password')
+            password = argv[list_index + 1]
     return password
