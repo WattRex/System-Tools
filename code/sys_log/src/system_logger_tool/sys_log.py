@@ -1,16 +1,15 @@
 #!/usr/bin/python3
-"""
-    This module works to have a logger instead of using prints,
-    it will create a file to save all the messages
-    with the hour and the module the message belongs to.
-"""
+'''
+This module works to have a logger instead of using prints,
+it will create a file to save all the messages
+with the hour and the module the message belongs to.
+'''
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
 from pathlib import Path
 import os
 
 #######################      LOGGING CONFIGURATION       #######################
-
 
 #######################         GENERIC IMPORTS          #######################
 from logging.config import fileConfig
@@ -20,7 +19,7 @@ from logging import getLogger, Logger, debug, Formatter, FileHandler,\
 from configparser import ConfigParser
 
 #######################       THIRD PARTY IMPORTS        #######################
-from system_config_tool import sys_conf_read_config_params, SysConfSectionNotFoundErrorC
+import yaml
 
 #######################          MODULE IMPORTS          #######################
 
@@ -31,8 +30,9 @@ dir_path: str = os.path.dirname(p=os.path.realpath(filename=__file__))
 
 #######################             CLASSES              #######################
 class SysLogLoggerC():
-    """This function will be called after the system has been called .
-    """
+    '''
+    This function will be called after the system has been called .
+    '''
     def __init__(self, \
                  file_config_path:str = dir_path+'/logginConfig.conf', \
                  file_log_levels: str = '...',
@@ -65,12 +65,12 @@ class SysLogLoggerC():
         fileConfig(fname=file_config_path,disable_existing_loggers=True)
 
         prev_fmt = Logger.root.handlers[0].formatter
-        # TODO: comprobar que es el root logger
+        # TODO: comprobar que es el root logger                              #pylint: disable=fixme
         if prev_fmt is not None:
             color_fmt = SysLogCustomFormatterC(fmt=prev_fmt._fmt, style='%',\
                                                datefmt=prev_fmt.datefmt)
             Logger.root.handlers[0].setFormatter(color_fmt)
-        # TODO: añadir else y casos de error
+        # TODO: añadir else y casos de error                                 #pylint: disable=fixme
 
         print("Logger configurado")
         if file_log_levels != '...' and os.path.isfile(file_log_levels):
@@ -107,8 +107,9 @@ class SysLogLoggerC():
 
 
 class SysLogCustomFormatterC(Formatter):
-    """Logging colored formatter, adapted from https://stackoverflow.com/a/56944256/3638629"""
-
+    '''
+    Logging colored formatter, adapted from https://stackoverflow.com/a/56944256/3638629
+    '''
     grey = '\x1b[38;5;253m'
     blue = '\x1b[38;5;39m'
     yellow = '\x1b[38;5;226m'
@@ -118,13 +119,14 @@ class SysLogCustomFormatterC(Formatter):
     reset = '\x1b[0m'
 
     def __init__(self, fmt: str or None = ..., datefmt: str or None = ..., style = ...) -> None:
-        """Initialize the custom format logger .
+        '''
+        Initialize the custom format logger .
 
         Args:
             fmt (strorNone, optional): String used to format the log message.
             datefmt (strorNone, optional): Format used to print the datetime.
             style ([type], optional): Style used to print the log message.
-        """
+        '''
         super().__init__(fmt=fmt, datefmt=datefmt, style=style)
         self.fmt: str = fmt
         self.formats: dict[int, str] = {
@@ -148,6 +150,23 @@ class SysLogCustomFormatterC(Formatter):
         log_fmt: str | None = self.formats.get(record.levelno)
         formatter = Formatter(log_fmt)
         return formatter.format(record)
+
+
+class _SectionNotFoundErrorC(Exception):
+    '''
+    Handle exception thrown in SysLog sectionNotFoundC .
+
+    Args:
+        Exception ([type]): [description]
+    '''
+    def __init__(self, message) -> None:
+        '''
+        Exception raised for errors when a section is not found in the file.
+
+        Args:
+            - message (str): explanation of the error
+        '''
+        super().__init__(message)
 
 
 #######################            FUNCTIONS             #######################
@@ -183,14 +202,14 @@ def sys_log_logger_get_module_logger(name : str,
             else:
                 # For test file. Ex: Test_APP_DIAG
                 name = name_list[0]
-        custom_level = sys_conf_read_config_params(
+        custom_level = __read_config_params(
             filename = config_by_module_filename, section = name)
         log.setLevel(str(custom_level))
         log.debug(msg=f"log level of {name} has been set to {custom_level}")
 
         # Assign the file handler to the logger
         # if the module name is found in the file_handlers section
-        file_handlers = sys_conf_read_config_params(
+        file_handlers = __read_config_params(
             filename = config_by_module_filename, section = 'file_handlers')
         for key in file_handlers:
             for module_name in file_handlers[key]:
@@ -209,7 +228,7 @@ def sys_log_logger_get_module_logger(name : str,
                     log.debug(f"Added handler for {module_name} ({key} file)")
         # Custom logging level set in .yaml file will be applied
 
-    except SysConfSectionNotFoundErrorC as exception:
+    except _SectionNotFoundErrorC as exception:
         #Default logging level set in config will be applied
         log.warning(f"{exception}")
         # log.warning(f"Module {name} not found in the log level
@@ -217,3 +236,32 @@ def sys_log_logger_get_module_logger(name : str,
     except Exception as exception:
         log.error(f"{exception}")
     return log
+
+
+def __read_config_params(filename:str = 'config.yaml',
+                            section: str|None = None) -> dict:
+    '''
+    Reads config parameters from a config file.
+
+    Args:
+        - filename (str, optional): Path to the file used to read the configuration.
+        Defaults to 'config.yaml'.
+        - section (str, optional): Section to be parsed from the configuration file.
+
+    Raises:
+        - SYS_LOG_Section_Not_Found_Error_c: Throw an exception if the section is
+        not found in the file or the file does not exists.
+
+    Returns:
+        - data (dict): Dictionary with the configuration section read.
+    '''
+    data = {}
+    with open(filename, 'r', encoding= 'utf-8') as file:
+        data = yaml.safe_load(file)
+    if section is not None:
+        if section in data:
+            data = data[section]
+        else:
+            raise _SectionNotFoundErrorC( \
+                f"Section {section} not found in the {filename} file")
+    return data
