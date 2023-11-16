@@ -152,7 +152,7 @@ class SysLogCustomFormatterC(Formatter):
         return formatter.format(record)
 
 
-class SysLogSectionNotFoundErrorC(Exception):
+class _SectionNotFoundErrorC(Exception):
     '''
     Handle exception thrown in SysLog sectionNotFoundC .
 
@@ -228,7 +228,7 @@ def sys_log_logger_get_module_logger(name : str,
                     log.debug(f"Added handler for {module_name} ({key} file)")
         # Custom logging level set in .yaml file will be applied
 
-    except SysLogSectionNotFoundErrorC as exception:
+    except _SectionNotFoundErrorC as exception:
         #Default logging level set in config will be applied
         log.warning(f"{exception}")
         # log.warning(f"Module {name} not found in the log level
@@ -262,6 +262,6 @@ def __read_config_params(filename:str = 'config.yaml',
         if section in data:
             data = data[section]
         else:
-            raise SysLogSectionNotFoundErrorC( \
+            raise _SectionNotFoundErrorC( \
                 f"Section {section} not found in the {filename} file")
     return data
