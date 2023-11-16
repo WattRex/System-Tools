@@ -1,1 +1,1 @@
-system_config_tool>=0.0.4
+PyYAML>=6.0.1
