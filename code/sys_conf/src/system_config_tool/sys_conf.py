@@ -27,7 +27,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################             CLASSES              #######################
 class SysConfSectionNotFoundErrorC(Exception):
     '''
-    Handle exception thrown in SysConf sectionNotFoundC .
+    Handle exception thrown in SysConf sectionNotFoundC.
 
     Args:
         Exception ([type]): [description]
