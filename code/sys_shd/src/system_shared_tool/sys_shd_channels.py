@@ -135,14 +135,14 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
                          max_messages = max_msg, max_message_size=max_message_size)
         self.block = True
 
-    def delete_until_last(self, timeout: int = DEFAULT_CHAN_TIMEOUT) -> None:
+    def delete_until_last(self) -> None:
         '''
         Delete all items from the queue, except the last one.
         '''
         while self.current_messages > 0:
-            self.receive(timeout = timeout)
+            self.receive(timeout = 0)
 
-    def receive_data(self, timeout: int|None = None) -> object:
+    def receive_data(self, timeout: int = DEFAULT_CHAN_TIMEOUT) -> object:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
