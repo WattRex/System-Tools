@@ -9,7 +9,7 @@ on:
   pull_request_review:
     types: [submitted]
     branches: [ "sys_conf", "sys_log", "sys_shd" ]
-    
+
 jobs:
 
   build-package-on-push:
@@ -23,7 +23,7 @@ jobs:
       python-version: "3.10"
 
   build-package-on-pull-request:
-    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved'}}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && contains(fromJson('["sys_conf", "sys_log", "sys_shd"]'), github.event.pull_request.head.ref)}}
     name: Build package ${{ github.event.pull_request.head.ref }}
     uses: ./.github/workflows/build_python_package.yml
     with:
