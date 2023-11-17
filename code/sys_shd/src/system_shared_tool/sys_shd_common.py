@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-"""
+'''
 This module has the common classes in system shared.
-"""
+'''
 
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
@@ -28,8 +28,9 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 _TO_MS = 1000
 
 class SysShdNodeStatusE(Enum):
-    """Enum class for the node state
-    """
+    '''
+    Enum class for the node state
+    '''
     COMM_ERROR = -1
     OK = 0
     INTERNAL_ERROR = 1
@@ -37,9 +38,9 @@ class SysShdNodeStatusE(Enum):
     STOP = 3
 
 class SysShdNodeParamsC:
-    """
+    '''
     Class that contains the can parameters in order to create the thread correctly
-    """
+    '''
     def __init__(self, target: Callable[..., object] | None = ...,
         args: Iterable[Any] = ...,
         kwargs: Mapping[str, Any] | None = ..., *, daemon: bool | None = ...):
@@ -49,20 +50,22 @@ class SysShdNodeParamsC:
         self.daemon = daemon
 
 class SysShdNodeC(Thread):
-    """Classmethod for creating a system shdNode class .
+    '''
+    Classmethod for creating a system shdNode class .
 
     Args:
         Thread ([type]): [description]
-    """
+    '''
     def __init__(self,name: str, cycle_period: int, working_flag : Event,
                  node_params: SysShdNodeParamsC = SysShdNodeParamsC()) -> None:
-        """Initialize the node.
+        '''
+        Initialize the node.
 
         Args:
             cycle_period (int): [Period in ms]
             working_flag (Event): [description]
             node_params (SysShdNodeParamsC, optional): .Defaults to SysShdNodeParamsC().
-        """
+        '''
         super().__init__(group = None, target = node_params.target, name = name,
                          args = node_params.args, kwargs = node_params.kwargs,
                          daemon = node_params.daemon)
@@ -71,20 +74,22 @@ class SysShdNodeC(Thread):
         self.status: SysShdNodeStatusE = SysShdNodeStatusE.STOP
 
     def sync_shd_data(self) -> None:
-        """Function to be implemented in the inherited class
-        """
+        '''
+        Function to be implemented in the inherited class
+        '''
         raise NotImplementedError()
 
     def process_iteration(self) -> None:
-        """Function to be implemented in the inherited class
-        """
+        '''
+        Function to be implemented in the inherited class
+        '''
         raise NotImplementedError()
 
     def stop(self) -> None:
-        """
+        '''
         Function to be implemented in the inherited class,
         it will execute when finishing the thread.
-        """
+        '''
         raise NotImplementedError()
 
     def run(self) -> None:
@@ -116,11 +121,12 @@ class SysShdNodeC(Thread):
         self.stop()
 
 class SysShdErrorC(Exception):
-    """Internal exception handler.
+    '''
+    Internal exception handler.
 
     Args:
         Exception ([type]): [description]
-    """
+    '''
     def __init__(self, message) -> None:
         '''
         Exception raised for errors when a queue is full and data has tried to be put in it.

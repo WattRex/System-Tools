@@ -21,19 +21,20 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################       THIRD PARTY IMPORTS        #######################
 import posix_ipc as ipc
+
+#######################          PROJECT IMPORTS         #######################
+
+
 #######################          MODULE IMPORTS          #######################
 from .sys_shd_common import SysShdErrorC
-#######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_CHAN_NUM_MSG, DEFAULT_IPC_MSG_SIZE, DEFAULT_CHAN_TIMEOUT
+
 #######################             CLASSES              #######################
 
-DEFAULT_CHAN_NUM_MSG : int = 100 # Max number of allowed message per chan
-DEFAULT_IPC_MSG_SIZE : int = 100 # Size of message sent through IPC message queue
-# For further information check out README.md
-
-DEFAULT_TIMEOUT :   int = 1
 
 class SysShdChanC(Queue):
     """A subclass of the SHDChannel class .
@@ -134,14 +135,14 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
                          max_messages = max_msg, max_message_size=max_message_size)
         self.block = True
 
-    def delete_until_last(self, timeout: int = DEFAULT_TIMEOUT) -> None:
+    def delete_until_last(self) -> None:
         '''
         Delete all items from the queue, except the last one.
         '''
         while self.current_messages > 0:
-            self.receive(timeout = timeout)
+            self.receive(timeout = 0)
 
-    def receive_data(self, timeout: int|None = None) -> object:
+    def receive_data(self, timeout: int = DEFAULT_CHAN_TIMEOUT) -> object:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
