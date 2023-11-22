@@ -87,13 +87,19 @@ def sys_conf_update_config_params(context : dict,
     '''
     if section is None:
         section = context['__package__'].split(".")[-1]
-    custom_params = sys_conf_read_config_params(filename = getenv('CONFIG_FILE_PATH', ''),
+    try:
+        custom_params = sys_conf_read_config_params(filename = getenv('CONFIG_FILE_PATH', ''),
                                                 section=section)
-    for const_name in constants_names:
-        if const_name in custom_params:
-            context[const_name] = custom_params[const_name]
-            log.debug(f"Constant {const_name} updated to: {custom_params[const_name]}")
-
+    except SysConfSectionNotFoundErrorC as error:
+        log.info(error)
+    else:
+        if custom_params is not None and len(custom_params) > 0:
+            for const_name in constants_names:
+                if const_name in custom_params:
+                    context[const_name] = custom_params[const_name]
+                    log.debug(f"Constant {const_name} updated to: {custom_params[const_name]}")
+        else:
+            log.warning(f"No custom parameters found in the {section} section found")
 
 def sys_conf_get_argv_password() -> str:
     '''
