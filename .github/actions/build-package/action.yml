@@ -59,6 +59,11 @@ runs:
       python3 ${{ github.action_path }}/get_version.py ${{ inputs.package-path }} $is_test
     shell: bash
 
+  - name: Copy LICENSE.txt from root repository if it exists
+    run: |
+      if [ -f "./LICENSE.txt" ]; then cp LICENSE.txt ${{ inputs.package-path }}/LICENSE.txt; else echo "No LICENSE.txt found in repo root"; fi
+    shell: bash
+
   - name: Build a binary wheel and a source tarball
     run: |
       python3 -m build --sdist --wheel --outdir dist/ ${{ inputs.package-path }}
