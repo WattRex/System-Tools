@@ -91,9 +91,9 @@ def sys_conf_update_config_params(context : dict,
         custom_params = sys_conf_read_config_params(filename = getenv('CONFIG_FILE_PATH', ''),
                                                 section=section)
     except SysConfSectionNotFoundErrorC as error:
-        log.info(error)
+        log.warning(error)
     else:
-        if custom_params is not None and len(custom_params) > 0:
+        if custom_params is not None:
             for const_name in constants_names:
                 if const_name in custom_params:
                     context[const_name] = custom_params[const_name]
