@@ -48,16 +48,20 @@ def merge_version():
         new_local_version = True
     else:
         pypi_version = pypi_check.stdout
+        latest_version = pypi_version.split(b'\n', 1)[0]
+        print(f"Latest version from Pypi: {latest_version}")
+        pypi_version = latest_version.split(b' ')[1][1:-1].decode('utf-8')
         print(f"Pypi version: {pypi_version}")
-        pypi_version = pypi_version.split(b'\n', 1)[0].split(b' ')[1][1:-1].decode('utf-8')
         new_local_version = vparse(checkout_version) > vparse(pypi_version)
 
     if new_local_version:
         new_version = checkout_version
     else:
-        new_version = pypi_version
+        new_version = pypi_version.split('.')
         patch = int(new_version[-1]) + 1
-        new_version = f'{new_version[:-1]}{patch}'
+        new_version[-1] = f'{patch}'
+        print(f"New patch version: {patch} -> {new_version}")
+        new_version = '.'.join(new_version)
 
     print(f"New version package is: {new_version}")
     subprocess.run(f'echo new-version={new_version} >> $GITHUB_OUTPUT', shell=True, check=False)
