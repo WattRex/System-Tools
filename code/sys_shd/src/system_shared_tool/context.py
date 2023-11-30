@@ -28,7 +28,9 @@ from system_config_tool import sys_conf_update_config_params
 DEFAULT_CHAN_NUM_MSG : int = 100 # Max number of allowed message per chan
 DEFAULT_IPC_MSG_SIZE : int = 100 # Size of message sent through IPC message queue
 DEFAULT_CHAN_TIMEOUT : int = 1
+DEFAULT_GPIO_CONFIG_PATH    : str = 'config_gpio.yaml'
 
-CONSTANTS_NAMES = ('DEFAULT_CHAN_NUM_MSG', 'DEFAULT_IPC_MSG_SIZE', 'DEFAULT_CHAN_TIMEOUT')
+CONSTANTS_NAMES = ('DEFAULT_CHAN_NUM_MSG', 'DEFAULT_IPC_MSG_SIZE', 'DEFAULT_CHAN_TIMEOUT',
+                   'DEFAULT_GPIO_CONFIG_PATH')
 sys_conf_update_config_params(context=globals(),
                               constants_names=CONSTANTS_NAMES)
