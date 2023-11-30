@@ -18,7 +18,7 @@ if __name__ == "__main__":
     cycler_logger = SysLogLoggerC()
 log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################       THIRD PARTY IMPORTS        #######################
-from RPi.GPIO.GPIO import setmode, BCM, BOARD, setup, output, HIGH, LOW, OUT
+from RPi.GPIO import  setmode, BCM, BOARD, setup, output, HIGH, LOW, OUT #pylint: disable= no-name-in-module
 
 #######################          MODULE IMPORTS          #######################
 
