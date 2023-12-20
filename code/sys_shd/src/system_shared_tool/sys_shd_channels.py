@@ -7,6 +7,7 @@ for each channel.
 
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
+from typing import Any
 #######################         GENERIC IMPORTS          #######################
 from queue import Queue, Empty, Full
 from pickle import dumps, loads, HIGHEST_PROTOCOL
@@ -59,7 +60,7 @@ class SysShdChanC(Queue):
         while self.qsize() > 1:
             self.get()
 
-    def receive_data(self) -> object:
+    def receive_data(self) -> Any:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
@@ -69,7 +70,7 @@ class SysShdChanC(Queue):
         '''
         return self.get()
 
-    def receive_data_unblocking(self) -> object:
+    def receive_data_unblocking(self) -> Any:
         '''
         Receive data from the queue in unblocking mode.
 
@@ -142,7 +143,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         while self.current_messages > 0:
             self.receive(timeout = 0)
 
-    def receive_data(self, timeout: int = DEFAULT_CHAN_TIMEOUT) -> object:
+    def receive_data(self, timeout: int|None = DEFAULT_CHAN_TIMEOUT) -> Any:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
@@ -162,7 +163,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         self.block = False
         return msg_decoded
 
-    def receive_data_unblocking(self) -> object:
+    def receive_data_unblocking(self) -> Any:
         '''
         Receive data from the queue in unblocking mode.
         Returns:
