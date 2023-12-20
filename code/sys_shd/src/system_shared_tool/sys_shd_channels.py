@@ -142,7 +142,7 @@ class SysShdIpcChanC(ipc.MessageQueue): #pylint: disable= c-extension-no-member
         while self.current_messages > 0:
             self.receive(timeout = 0)
 
-    def receive_data(self, timeout: int = DEFAULT_CHAN_TIMEOUT) -> object:
+    def receive_data(self, timeout: int|None = DEFAULT_CHAN_TIMEOUT) -> object:
         '''
         Pop the first element from the queue and return it. If queue is empty,
         wait until a new element is pushed to the queue.
