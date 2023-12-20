@@ -11,7 +11,7 @@ from typing import Any, Iterable, Callable, Mapping
 from enum import Enum
 from time import time, sleep
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
-from system_config_tool import sys_conf_read_config_params
+from system_config_tool import sys_conf_read_config_params, SysConfSectionNotFoundErrorC
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
 if __name__ == "__main__":
@@ -73,8 +73,13 @@ class SysShdNodeC(Thread):
             working_flag (Event): [description]
             node_params (SysShdNodeParamsC, optional): .Defaults to SysShdNodeParamsC().
         '''
-        port: int = sys_conf_read_config_params(filename=DEFAULT_GPIO_CONFIG_PATH, section= name)
-        self.gpio: SysShdPeripheralC = SysShdPeripheralC(port=port)
+        try:
+            port: int = sys_conf_read_config_params(filename=DEFAULT_GPIO_CONFIG_PATH,
+                                                    section= name)
+        except SysConfSectionNotFoundErrorC as err:
+            log.warning(f"No port configurable {err}")
+        else:
+            self.gpio: SysShdPeripheralC = SysShdPeripheralC(port=port)
         super().__init__(group = None, target = node_params.target, name = name,
                          args = node_params.args, kwargs = node_params.kwargs,
                          daemon = node_params.daemon)
@@ -111,9 +116,11 @@ class SysShdNodeC(Thread):
         while self.working_flag.is_set():
             try:
                 next_time = time()+self.cycle_period/_TO_MS
-                self.gpio.set_gpio_up()
+                if hasattr(self, 'gpio'):
+                    self.gpio.set_gpio_up()
                 self.process_iteration()
-                self.gpio.set_gpio_down()
+                if hasattr(self, 'gpio'):
+                    self.gpio.set_gpio_down()
                 # Sleep the remaining time
                 sleep_time = next_time-int(time())
                 # sleep_time is measure in miliseconds
