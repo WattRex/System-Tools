@@ -2,3 +2,4 @@ posix-ipc>=1.1.1
 PyYAML>=6.0.1
 system-config-tool>=0.0.7
 system-logger-tool>=0.2.2
+RPi-GPIO>=0.7.1
